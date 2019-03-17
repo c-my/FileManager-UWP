@@ -1,28 +1,22 @@
 # UVP Homework 20190314
 
+## 才明洋
+
 1. Please choose a control fom XAML Control Gallery that can contribute to your app.
 
-   ListView
+   NavigationView
 
 2. Explain why it would contribute to your app.
 
-   Use ListView for showing file lists.
+   NavigationView将页面分为两部分：左侧的汉堡菜单和右侧的内容部分。通过左侧的汉堡菜单可以在多个页面中进行切换，在文件管理器中，可以将虚拟目录放在菜单中，通过点击在不同页面中切换。
 
 3. Choose a client dev platform, e.g., Android, Qt, iOS, that you are not familiar with.
 
-   Android
+   html
 
 4. Figure out if your chosen platform supports that control. If so, demonstrate how to use it.
 
-   Android supports ListView.
-
-   
-
-## 才明洋
-
-1. NavigationView
-2. NavigationView将页面分为两部分：左侧的汉堡菜单和右侧的内容部分。通过左侧的汉堡菜单可以在多个页面中进行切换，在文件管理器中，可以将虚拟目录放在菜单中，通过点击在不同页面中切换。
-3. html可以通过`css`和`js`脚本实现这个控件，实现方法如下：
+   html可以通过`css`和`js`脚本实现这个控件，实现方法如下：
 
 ~~~html
 <!DOCTYPE html>
@@ -127,64 +121,78 @@ function closeNav() {
 
 
 
-
 ## 王明建
 
-1. Declare a ListView in xml file.
+1. Please choose a control fom XAML Control Gallery that can contribute to your app.
 
-   ```xml
-   <ListView android:id="@+id/list_view" android:layout_width="match_parent" android:layout_height="match_parent" />
-   ```
-
-2. Create a adapter class for display data. When it is trying to show a list, Android will call the following function for every item, the function should put the <i>position-th</i> item's content into <i>convertView</i>.
-
-   ```java
-   private class MyAdapter extends BaseAdapter { 
-       @Override
-       public View getView(int position, View convertView, ViewGroup container) {
-           if (convertView == null) { 
-               convertView = getLayoutInflater().inflate(
-                   R.layout.list_item, container, false); 
-           } 
-           ((TextView) convertView.findViewById(android.R.id.text1)) .setText(getItem(position)); 
-           return convertView; 
-       } 
-   }
-   ```
-
-3. Combine ListView and Adapter together in initialize.
-
-   ``` java
-   (ListView)listView = findViewById(R.id.list_view);
-   listView.setAdapter(new MyAdapter);
-   ```
-
-## 张晨
-
-1. Please choose a control from XAML Control Gallery that can contribute to your app.
-
-   ​	ToolTip
+   ListView
 
 2. Explain why it would contribute to your app.
 
-   ​	工具栏是必须的
+   Use ListView for showing file lists.
 
 3. Choose a client dev platform, e.g., Android, Qt, iOS, that you are not familiar with.
 
-   ​	微信小程序
+   Android
 
-4. Figure out if your chosen platform supports that control. If so, demonstrate how to use
-   it.
+4. Figure out if your chosen platform supports that control. If so, demonstrate how to use it.
 
-   ​	支持tabBar
+   Android supports ListView.
+   1. Declare a ListView in xml file.
 
-5. 具体实现
+      ```xml
+      <ListView android:id="@+id/list_view" android:layout_width="match_parent" android:layout_height="match_parent" />
+      ```
 
-   ​	在app.json中添加tabBar并且简单配置
+   2. Create a adapter class for display data. When it is trying to show a list, Android will call the following function for every item, the function should put the <i>position-th</i> item's content into <i>convertView</i>.
+
+      ```java
+      private class MyAdapter extends BaseAdapter { 
+          @Override
+          public View getView(int position, View convertView, ViewGroup container) {
+              if (convertView == null) { 
+                  convertView = getLayoutInflater().inflate(
+                      R.layout.list_item, container, false); 
+              } 
+              ((TextView) convertView.findViewById(android.R.id.text1)) .setText(getItem(position)); 
+              return convertView; 
+          } 
+      }
+      ```
+
+   3. Combine ListView and Adapter together in initialize.
+
+      ``` java
+      (ListView)listView = findViewById(R.id.list_view);
+      listView.setAdapter(new MyAdapter);
+      ```
+
+   ## 张晨
+
+   1. Please choose a control from XAML Control Gallery that can contribute to your app.
+
+      ​	ToolTip
+
+   2. Explain why it would contribute to your app.
+
+      ​	工具栏是必须的
+
+   3. Choose a client dev platform, e.g., Android, Qt, iOS, that you are not familiar with.
+
+      ​	微信小程序
+
+   4. Figure out if your chosen platform supports that control. If so, demonstrate how to use
+      it.
+
+      ​	支持tabBar
+
+   5. 具体实现
+
+      ​	在app.json中添加tabBar并且简单配置
 
    ![](https://img01.sogoucdn.com/app/a/100520146/3B3E1EEF223A990A225B09A437CC73B0)
 
-6. 最后效果
+      最后效果
 
    ![](https://img01.sogoucdn.com/app/a/100520146/C2C2046C26C8CEF8D663B656BD439A0E)
 
