@@ -182,9 +182,9 @@ function closeNav() {
 
    ​	在app.json中添加tabBar并且简单配置
 
-   ![](.\stepout-part1-pic1.png)
+   ![](https://img01.sogoucdn.com/app/a/100520146/3B3E1EEF223A990A225B09A437CC73B0)
 
 6. 最后效果
 
-   ![](.\stepout-part1-pic2.jpg)
+   ![](https://img01.sogoucdn.com/app/a/100520146/C2C2046C26C8CEF8D663B656BD439A0E)
 
