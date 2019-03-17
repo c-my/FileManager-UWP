@@ -182,9 +182,9 @@ function closeNav() {
 
    ​	在app.json中添加tabBar并且简单配置
 
-   ![](.\pic\stepout-part1-pic1.png)
+   ![](.\stepout-part1-pic1.png)
 
 6. 最后效果
 
-   ![](.\pic\stepout-part1-pic2.jpg)
+   ![](.\stepout-part1-pic2.jpg)
 
