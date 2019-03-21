@@ -1,0 +1,75 @@
+﻿<Page
+    x:Class="FileManager_UWP.View.FileListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FileManager_UWP.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:storage="using:Windows.Storage"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Button 
+            Grid.Row="0"
+            Grid.Column="1"
+            Name="getFileList"
+            Click="GetFileList_Click"
+            Content="获得文件列表"
+            FontSize="20"/>
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="Auto"
+            Text="D:\"
+            Name="pathText"/>
+        <ListView
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            ItemsSource="{x:Bind Files}"
+            CanDragItems="True" CanReorderItems="True" AllowDrop="True"
+            SelectionMode="Single"
+            >
+            <ListView.ItemTemplate>
+                <DataTemplate 
+                    x:Name="SingleLineDataTemplate" 
+                    x:DataType="local:DisplayFileFolderItem">
+                    <StackPanel 
+                        Orientation="Horizontal" 
+                        Height="44" 
+                        Padding="12" 
+                        AutomationProperties.Name="{x:Bind Name}">
+                        <Image Source="Placeholder.png"
+                               Height="16" 
+                               Width="16" 
+                               VerticalAlignment="Center"/>
+                        <TextBlock 
+                            Text="{x:Bind Name}" 
+                            VerticalAlignment="Center" 
+                            Style="{ThemeResource BaseTextBlockStyle}" 
+                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
+                            Margin="12,0,0,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock
+            Name="DebugPanel"
+            Grid.Row="2">
+
+        </TextBlock>
+
+    </Grid>
+</Page>
