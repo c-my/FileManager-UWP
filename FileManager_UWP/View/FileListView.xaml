@@ -68,7 +68,6 @@
         <TextBlock
             Name="DebugPanel"
             Grid.Row="2">
-
         </TextBlock>
 
     </Grid>
