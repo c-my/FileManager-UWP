@@ -1,10 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" 
-         xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" 
-         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" 
-         xmlns:wincap="https://schemas.microsoft.com/appx/manifest/foundation/windows10/windowscapabilities" 
-         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-         IgnorableNamespaces="uap mp rescap">
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:wincap="https://schemas.microsoft.com/appx/manifest/foundation/windows10/windowscapabilities" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap mp rescap">
   <Identity Name="c339ceaf-658a-4c74-9c4b-5b956758df7c" Publisher="CN=MingjianW" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="c339ceaf-658a-4c74-9c4b-5b956758df7c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
@@ -23,12 +18,12 @@
       <uap:VisualElements DisplayName="FileManager_UWP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="FileManager_UWP" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="white" />
       </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <rescap:Capability Name="broadFileSystemAccess"/>
+    <rescap:Capability Name="broadFileSystemAccess" />
   </Capabilities>
 </Package>

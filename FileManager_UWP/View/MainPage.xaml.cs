@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using FileManager_UWP.View;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -25,6 +26,7 @@ namespace FileManager_UWP
         public MainPage()
         {
             this.InitializeComponent();
+            mainFrame.Navigate(typeof(FileListView));
         }
     }
 }
