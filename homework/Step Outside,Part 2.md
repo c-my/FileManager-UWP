@@ -87,4 +87,55 @@
 
    3. 截图
 
+## 才明洋
 
+1. Please choose a technique that can contribute to your app from https://docs.microsoft.com/en-us/windows/uwp/develop/
+
+   data binding
+
+2. Explain why it would contribute to your app.
+
+   文件管理器中最重要的功能是显示文件列表，这需要显示文件，根据文件的变化更改显示，甚至通过`view`更改数据。这可以采用数据绑定的方式，将文件的数据结构绑定到`view`中。
+
+3. In the client dev platform for the last assignment, figure out if your chosen platform supports that technique. If so, demonstrate how to use it.
+
+   `html`无法直接实现数据绑定，但可以使用一些前端框架来实现绑定功能，例如`vue.js`
+
+   实现方法：
+
+   * 插入内容
+
+     ~~~html
+     <div id="app">
+         {{name}}	// 插值
+     </div>
+     <script>
+     new Vue({
+       el:"#app",
+       data:{
+         name:"real name",
+       }
+     })
+     </script>
+     ~~~
+
+     
+
+     将需要绑定的变量用双大括号括起来，这样在最终渲染的时候就可以将其替换成变量的值。在绑定时要注明属性名。
+
+   * 绑定`html`内容
+
+   ~~~html
+   <div id="app">
+   	<span v-html="rawHtml"></span>
+   </div>
+   <script>
+   	  el:"#app",
+     data:{
+       rawHtml:"<h1>Header</h1>",
+     }
+   });
+   </script>
+   ~~~
+
+   
