@@ -51,11 +51,11 @@
 
    3. 在设置中为本应用授予文件系统权限。
 
-      ![授权](D:\FileManager-UWP\homework\part2-wmj-3.png)
+      ![授权](part2-wmj-3.png)
 
    4. 效果截图
-
-      ![效果截图](D:\FileManager-UWP\homework\part2-wmj-1.png)
+   
+      ![效果截图](part2-wmj-1.png)
 
 3. In the client dev platform for the last assignment, figure out if your chosen platform supports that technique. If so, demonstrate how to use it.
 
@@ -86,6 +86,9 @@
       ```
 
    3. 截图
+   
+      ![效果截图](part2-wmj-2.png)
+      
 
 ## 才明洋
 
