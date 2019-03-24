@@ -140,5 +140,52 @@
    });
    </script>
    ~~~
+   
+   
+## 张晨
+1. Please choose a technique that can contribute to your app from https://docs.microsoft.com/en-us/windows/uwp/develop/
+      	 日期选择功能
+       	 实现方式
+      ```xml
+		 <CalendarDatePicker PlaceholderText="Pick a date" Header="Calendar" />
+      ```
+2. Explain why it would contribute to your app.
+        在我们的文件管理器中，我们打算做一个虚拟目录的功能。
+		用户可以在不同的时间添加不同的工程和文件目录。
+		日期选择器可以让用户查找到具体某天的工程情况
+3. In the client dev platform for the last assignment, figure out if your chosen platform supports that technique. If so, demonstrate how to use it.
+        在微信小程序中：
+        picker组件可以完成这个功能
+        首先看一下picker的官方文档：
+		picker
+		从底部弹起的滚动选择器，现支持五种选择器，通过mode来区分，分别是普通选择器，多列选择器，时间选择器，日期选择器，省市区选择器，默认是普通选择器。
+			坑1：不能改样式！
+			坑2：picker组件在ios和android上的展示效果不同
+			所以如果想自定义的话请用picker-view:
+		picker-view
+		嵌入页面的滚动选择器
+属性名	类型	说明	最低版本
+value	NumberArray	数组中的数字依次表示 picker-view 内的 picker-view-column 选择的第几项（下标从 0 开始），数字大于 picker-view-column 可选项长度时，选择最后一项。	
+indicator-style	String	设置选择器中间选中框的样式	
+indicator-class	String	设置选择器中间选中框的类名
+mask-style	String	设置蒙层的样式	
+mask-class	String	设置蒙层的类名	
+bindchange	EventHandle	当滚动选择，value 改变时触发 change 事件，event.detail = {value: value}；value为数组，表示 picker-view 内的 picker-view-column 当前选择的是第几项（下标从 0 开始）	
+bindpickstart	EventHandle	当滚动选择开始时候触发事件	
+bindpickend	EventHandle	当滚动选择结束时候触发事件	
+aria-label	String	无障碍访问，（属性）元素的额外描述	
+
+	Picker:
+   ~~~html
+<view class="section">
+	<view class="section__title">日期选择器</view>
+	<picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+		<view class="picker">
+			当前选择: {{date}}
+		</view>
+	</picker>
+</view>
+   ~~~
+
 
    
