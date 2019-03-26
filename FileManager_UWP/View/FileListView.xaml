@@ -31,15 +31,19 @@
             Grid.Row="0"
             Grid.Column="0"
             Width="Auto"
-            Text="D:\"
+            Text="C:\"
             Name="pathText"/>
         <ListView
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             ItemsSource="{x:Bind Files}"
-            CanDragItems="True" CanReorderItems="True" AllowDrop="True"
+            CanDragItems="False" 
+            CanReorderItems="True" 
+            AllowDrop="True"
             SelectionMode="Single"
+            IsItemClickEnabled="True"
+            ItemClick="ListView_ItemClick"
             >
             <ListView.ItemTemplate>
                 <DataTemplate 

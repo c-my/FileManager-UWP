@@ -121,6 +121,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Server\FileServer.cs" />
+    <Compile Include="ViewModel\FileListViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="View\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
