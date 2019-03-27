@@ -42,8 +42,10 @@
             CanReorderItems="True" 
             AllowDrop="True"
             SelectionMode="Single"
-            IsItemClickEnabled="True"
-            ItemClick="ListView_ItemClick"
+            Name="FileList"
+            
+            IsDoubleTapEnabled="True"
+            DoubleTapped="ListView_DoubleTapped"
             >
             <ListView.ItemTemplate>
                 <DataTemplate 

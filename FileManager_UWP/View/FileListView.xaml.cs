@@ -89,5 +89,13 @@ namespace FileManager_UWP.View {
                 UpdateFileList(i.Path);
             }
         }
+
+        private void ListView_DoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e) {
+            DisplayFileFolderItem i = FileList.SelectedItem as DisplayFileFolderItem;
+            if (i.IsFolder) {
+                pathText.Text = i.Path;
+                UpdateFileList(i.Path);
+            }
+        }
     }
 }
