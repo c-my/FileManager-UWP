@@ -1,4 +1,4 @@
-﻿using FileManager_UWP.Server;
+﻿using FileManager_UWP.Service;
 using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
@@ -74,7 +74,7 @@ namespace FileManager_UWP
                 Window.Current.Activate();
             }
 
-            SimpleIoc.Default.Register<FileServer>();
+            SimpleIoc.Default.Register<FileService>();
         }
 
         /// <summary>
