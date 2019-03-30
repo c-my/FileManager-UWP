@@ -50,7 +50,7 @@
                         Height="44" 
                         Padding="12" 
                         >
-                        <Image Source="Assets/StoreLogo.png"
+                        <Image Source="{Binding Icon}"
                                Height="16" 
                                Width="16" 
                                VerticalAlignment="Center"/>

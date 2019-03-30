@@ -26,10 +26,25 @@ namespace FileManager_UWP.Service {
             }
             IReadOnlyList<StorageFolder> folders = await folder.GetFoldersAsync();
             IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
-            List<DisplayFileFolderItem> DisplayFileFolderItems;
-            DisplayFileFolderItems = folders.Select(i => new DisplayFileFolderItem(i)).ToList();
-            DisplayFileFolderItems.AddRange(files.Select(i => new DisplayFileFolderItem(i)));
-            return DisplayFileFolderItems;
+            //List<DisplayFileFolderItem> displayFileFolderItems = 
+            //    folders.Select(async i =>
+            //        await DisplayFileFolderItem.GetInstance(i));
+            //displayFileFolderItems.AddRange(files.Select(
+            //    i => new DisplayFileFolderItem(i)));
+            // displayFileFolderItems.AddRange(files.Select(DisplayFileFolderItem.getInstance) as IEnumerable<DisplayFileFolderItem>);
+
+            List<DisplayFileFolderItem> displayFileFolderItems = new List<DisplayFileFolderItem>();
+            foreach (var file in folders) {
+                displayFileFolderItems.Add(
+                    await DisplayFileFolderItem.GetInstance(file));
+            }
+            foreach (var file in files) {
+                displayFileFolderItems.Add(
+                    await DisplayFileFolderItem.GetInstance(file)
+                );
+            }
+
+            return displayFileFolderItems;
         }
     }
 }

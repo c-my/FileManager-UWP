@@ -47,10 +47,6 @@ namespace FileManager_UWP.ViewModel {
                 var fileList = await fileService.GetDisplayFileFolderList(Path);
                 DebugText = fileList[0].Name;
                 DisplayFileFolderItems = fileList;
-                Debug.WriteLine(Path + fileList.Count);
-                foreach (var i in DisplayFileFolderItems) {
-                    Debug.WriteLine(i.Name);
-                }
             }));
     }
 }
