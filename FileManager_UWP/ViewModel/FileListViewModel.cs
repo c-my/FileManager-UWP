@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace FileManager_UWP.ViewModel {
     public class FileListViewModel : ViewModelBase {
@@ -40,13 +42,51 @@ namespace FileManager_UWP.ViewModel {
         /// <summary>
         /// 刷新命令
         /// </summary>
-        public RelayCommand _refreshCommand;
+        private RelayCommand _refreshCommand;
         public RelayCommand RefreshCommand =>
             _refreshCommand ?? (_refreshCommand = new RelayCommand(async () => {
                 var fileService = new FileService();
                 var fileList = await fileService.GetDisplayFileFolderList(Path);
-                DebugText = fileList[0].Name;
                 DisplayFileFolderItems = fileList;
             }));
+
+        private object _listSelectedItem;
+        public object ListSelectedItem {
+            get => _listSelectedItem;
+            set
+            {
+                Set(nameof(ListSelectedItem), ref _listSelectedItem, value);
+            }
+        }
+
+        private List<object> _listSelectedItems;
+        public List<object> ListSelectedItems {
+            get => _listSelectedItems;
+            set {
+                Debug.WriteLine("Select " + ((DisplayFileFolderItem)ListSelectedItems[0]).Name);
+                Set(nameof(ListSelectedItems), ref _listSelectedItems, value);
+            }
+        }
+
+        public void HandleDoubleTapped(object sender, DoubleTappedRoutedEventArgs e) {
+            DisplayFileFolderItem i = ListSelectedItem as DisplayFileFolderItem;
+            Debug.WriteLine("Double tapped");
+            if (i != null && i.IsFolder) {
+                Debug.WriteLine("double tapped: " + i.Name);
+                Path = i.Path;
+                RefreshCommand.Execute(null);
+            }
+        }
+
+    
+        public void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e) {
+            DisplayFileFolderItem i = e.ClickedItem as DisplayFileFolderItem;
+            Debug.WriteLine("Clicked");
+            if (i != null && i.IsFolder) {
+                Debug.WriteLine("Clicked: " + i.Name);
+                Path = i.Path;
+                RefreshCommand.Execute(null);
+            }
+        }
     }
 }

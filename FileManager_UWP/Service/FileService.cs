@@ -33,15 +33,14 @@ namespace FileManager_UWP.Service {
             //    i => new DisplayFileFolderItem(i)));
             // displayFileFolderItems.AddRange(files.Select(DisplayFileFolderItem.getInstance) as IEnumerable<DisplayFileFolderItem>);
 
-            List<DisplayFileFolderItem> displayFileFolderItems = new List<DisplayFileFolderItem>();
+            List<DisplayFileFolderItem> displayFileFolderItems = new List<DisplayFileFolderItem> {await DisplayFileFolderItem.parent(path)};
             foreach (var file in folders) {
                 displayFileFolderItems.Add(
                     await DisplayFileFolderItem.GetInstance(file));
             }
             foreach (var file in files) {
                 displayFileFolderItems.Add(
-                    await DisplayFileFolderItem.GetInstance(file)
-                );
+                    await DisplayFileFolderItem.GetInstance(file));
             }
 
             return displayFileFolderItems;

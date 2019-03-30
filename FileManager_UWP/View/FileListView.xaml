@@ -22,8 +22,7 @@
             Grid.Row="0"
             Grid.Column="1"
             Command="{Binding RefreshCommand}"
-            
-            Content="获得文件列表"
+            Content="刷新文件列表"
             FontSize="20"/>
         <TextBox
             Grid.Row="0"
@@ -40,8 +39,12 @@
             CanReorderItems="True" 
             AllowDrop="False"
             SelectionMode="Single"
+            SelectedItem="{Binding ListSelectedItem, Mode=TwoWay}"
             
             IsDoubleTapEnabled="True"
+            IsTapEnabled="True"
+            DoubleTapped="{x:Bind vm.HandleDoubleTapped}"
+
             >
             <ListView.ItemTemplate>
                 <DataTemplate>

@@ -18,7 +18,7 @@ namespace FileManager_UWP.Model {
         public string Name { get; set; }
         public string Path { get; set; }
         public bool IsFolder { get; set; }
-        public BitmapImage Icon { get; set; }
+        public BitmapImage Icon { get; set; } = new BitmapImage();
 
         public DisplayFileFolderItem(StorageFolder file) {
             Name = file.Name;
@@ -39,7 +39,6 @@ namespace FileManager_UWP.Model {
                 Name = file.Name,
                 Path = file.Path,
                 IsFolder = false,
-                Icon = new BitmapImage()
             };
             var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 32);
             await obj.Icon.SetSourceAsync(thumbnail).AsTask();
@@ -59,8 +58,7 @@ namespace FileManager_UWP.Model {
             DisplayFileFolderItem obj = new DisplayFileFolderItem {
                 Name = file.Name,
                 Path = file.Path,
-                IsFolder = false,
-                Icon = new BitmapImage()
+                IsFolder = true,
             };
             var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 32);
             await obj.Icon.SetSourceAsync(thumbnail).AsTask();
@@ -76,13 +74,19 @@ namespace FileManager_UWP.Model {
             return obj;
         }
 
-        public static DisplayFileFolderItem parent(string current) {
-            DisplayFileFolderItem d = new DisplayFileFolderItem();
-            d.Name = "..";
-            d.IsFolder = true;
-            d.Path = current.Substring(0, current.LastIndexOf('\\'));
+        public async static Task<DisplayFileFolderItem> parent(string current) {
+            DisplayFileFolderItem d = new DisplayFileFolderItem
+            {
+                Name = "..",
+                IsFolder = true,
+                Path = current.Substring(0, current.LastIndexOf('\\'))
+
+            };
             if (d.Path.Length == 2)
                 d.Path += "\\";
+            StorageFolder file = await StorageFolder.GetFolderFromPathAsync(d.Path);
+            var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 32);
+            await d.Icon.SetSourceAsync(thumbnail).AsTask();
             return d;
         }
     }
