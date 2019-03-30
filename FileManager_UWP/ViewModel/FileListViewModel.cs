@@ -28,7 +28,13 @@ namespace FileManager_UWP.ViewModel {
         private IEnumerable<DisplayFileFolderItem> _displayFileFolderItems;
         public IEnumerable<DisplayFileFolderItem> DisplayFileFolderItems {
             get => _displayFileFolderItems;
-            set => Set(nameof(DisplayFileFolderItem), ref _displayFileFolderItems, value);
+            set => Set(nameof(DisplayFileFolderItems), ref _displayFileFolderItems, value);
+        }
+
+        private string _debugText;
+        public string DebugText {
+            get => _debugText;
+            set => Set(nameof(DebugText), ref _debugText, value);
         }
 
         /// <summary>
@@ -37,12 +43,14 @@ namespace FileManager_UWP.ViewModel {
         public RelayCommand _refreshCommand;
         public RelayCommand RefreshCommand =>
             _refreshCommand ?? (_refreshCommand = new RelayCommand(async () => {
-                var todoItemService = new FileService();
-                var todoItemList = await todoItemService.GetDisplayFileFolderList(Path);
-                DisplayFileFolderItems = todoItemList;
-                foreach (var i in DisplayFileFolderItems)
+                var fileService = new FileService();
+                var fileList = await fileService.GetDisplayFileFolderList(Path);
+                DebugText = fileList[0].Name;
+                DisplayFileFolderItems = fileList;
+                Debug.WriteLine(Path + fileList.Count);
+                foreach (var i in DisplayFileFolderItems) {
                     Debug.WriteLine(i.Name);
-                Debug.WriteLine(Path + todoItemList.Count);
+                }
             }));
     }
 }

@@ -12,6 +12,11 @@ namespace FileManager_UWP.Service {
     /// 负责提供本地文件及文件夹访问服务
     /// </summary>
     class FileService {
+        /// <summary>
+        /// 获得可显示的目录
+        /// </summary>
+        /// <param name="path">路径</param>
+        /// <returns>文件和文件夹列表</returns>
         public async Task<List<DisplayFileFolderItem>> GetDisplayFileFolderList(string path) {
             StorageFolder folder = null;
             try {
