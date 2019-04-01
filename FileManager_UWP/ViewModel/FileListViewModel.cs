@@ -68,25 +68,22 @@ namespace FileManager_UWP.ViewModel {
             }
         }
 
-        public void HandleDoubleTapped(object sender, DoubleTappedRoutedEventArgs e) {
-            DisplayFileFolderItem i = ListSelectedItem as DisplayFileFolderItem;
-            Debug.WriteLine("Double tapped");
-            if (i != null && i.IsFolder) {
-                Debug.WriteLine("double tapped: " + i.Name);
-                Path = i.Path;
-                RefreshCommand.Execute(null);
-            }
-        }
+        /// <summary>
+        /// 刷新命令
+        /// </summary>
+        private RelayCommand _doubleTappedCommand;
+        public RelayCommand DoubleTappedCommand =>
+            _doubleTappedCommand ?? (_doubleTappedCommand = new RelayCommand(
+                async () => {
+                    DisplayFileFolderItem i = ListSelectedItem as DisplayFileFolderItem;
+                    Debug.WriteLine("Double tapped");
+                    if (i != null && i.IsFolder)
+                    {
+                        Debug.WriteLine("double tapped: " + i.Name);
+                        Path = i.Path;
+                        RefreshCommand.Execute(null);
+                    }
+            }));
 
-    
-        public void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e) {
-            DisplayFileFolderItem i = e.ClickedItem as DisplayFileFolderItem;
-            Debug.WriteLine("Clicked");
-            if (i != null && i.IsFolder) {
-                Debug.WriteLine("Clicked: " + i.Name);
-                Path = i.Path;
-                RefreshCommand.Execute(null);
-            }
-        }
     }
 }
