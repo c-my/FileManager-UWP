@@ -72,8 +72,9 @@ namespace FileManager_UWP.ViewModel {
         private RelayCommand _doubleTappedCommand;
         public RelayCommand DoubleTappedCommand =>
             _doubleTappedCommand ?? (_doubleTappedCommand = new RelayCommand(
-                () => {
-                    DisplayFileFolderItem i = ListSelectedItem as DisplayFileFolderItem;
+                () =>
+                {
+                    IDisplayable i = ListSelectedItem as IDisplayable;
                     Debug.WriteLine("Double tapped");
                     if (i != null && i.IsFolder)
                     {
