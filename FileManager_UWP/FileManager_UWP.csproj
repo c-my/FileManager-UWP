@@ -120,7 +120,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\DisplayableFile.cs" />
+    <Compile Include="Model\DisplayableFolder.cs" />
     <Compile Include="Model\DisplayFileFolderItem.cs" />
+    <Compile Include="Model\IDisplayable.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="ViewModel\FileListViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />

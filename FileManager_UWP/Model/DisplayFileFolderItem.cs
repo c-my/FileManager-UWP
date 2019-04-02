@@ -12,9 +12,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FileManager_UWP.Model {
     /// <summary>
-    /// 显示用的文件文件夹统一类
+    /// 显示用的文件文件夹统一类， 已废弃
     /// </summary>
-    public class DisplayFileFolderItem {
+    class DisplayFileFolderItem {
         public string Name { get; set; }
         public string Path { get; set; }
         public bool IsFolder { get; set; }
@@ -74,18 +74,13 @@ namespace FileManager_UWP.Model {
             return obj;
         }
 
-        public async static Task<DisplayFileFolderItem> parent(string current) {
-            DisplayFileFolderItem d = new DisplayFileFolderItem
-            {
-                Name = "..",
-                IsFolder = true,
-                Path = current.Substring(0, current.LastIndexOf('\\'))
-
-            };
-            if (d.Path.Length == 2)
-                d.Path += "\\";
-            StorageFolder file = await StorageFolder.GetFolderFromPathAsync(d.Path);
+        public static async Task<DisplayFileFolderItem> parent(string current) {
+            string path = current.Substring(0, current.LastIndexOf('\\'));
+            if (path.Length == 2)
+                path += "\\";
+            StorageFolder file = await StorageFolder.GetFolderFromPathAsync(path);
             var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 32);
+            DisplayFileFolderItem d = new DisplayFileFolderItem(file);
             await d.Icon.SetSourceAsync(thumbnail).AsTask();
             return d;
         }

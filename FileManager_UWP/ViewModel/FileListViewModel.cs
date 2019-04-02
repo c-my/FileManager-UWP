@@ -27,8 +27,8 @@ namespace FileManager_UWP.ViewModel {
         /// <summary>
         /// 文件和文件夹列表
         /// </summary>
-        private IEnumerable<DisplayFileFolderItem> _displayFileFolderItems;
-        public IEnumerable<DisplayFileFolderItem> DisplayFileFolderItems {
+        private IEnumerable<IDisplayable> _displayFileFolderItems;
+        public IEnumerable<IDisplayable> DisplayFileFolderItems {
             get => _displayFileFolderItems;
             set => Set(nameof(DisplayFileFolderItems), ref _displayFileFolderItems, value);
         }
@@ -46,26 +46,24 @@ namespace FileManager_UWP.ViewModel {
         public RelayCommand RefreshCommand =>
             _refreshCommand ?? (_refreshCommand = new RelayCommand(async () => {
                 var fileService = new FileService();
-                var fileList = await fileService.GetDisplayFileFolderList(Path);
-                DisplayFileFolderItems = fileList;
+                try {
+                    var fileList = await fileService.GetDisplayFileFolderList(Path);
+                    DisplayFileFolderItems = fileList;
+                } catch (Exception e) {
+                    Debug.WriteLine(e.Message);
+                }
             }));
 
         private object _listSelectedItem;
         public object ListSelectedItem {
             get => _listSelectedItem;
-            set
-            {
-                Set(nameof(ListSelectedItem), ref _listSelectedItem, value);
-            }
+            set => Set(nameof(ListSelectedItem), ref _listSelectedItem, value);
         }
 
         private List<object> _listSelectedItems;
         public List<object> ListSelectedItems {
             get => _listSelectedItems;
-            set {
-                Debug.WriteLine("Select " + ((DisplayFileFolderItem)ListSelectedItems[0]).Name);
-                Set(nameof(ListSelectedItems), ref _listSelectedItems, value);
-            }
+            set => Set(nameof(ListSelectedItems), ref _listSelectedItems, value);
         }
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace FileManager_UWP.ViewModel {
         private RelayCommand _doubleTappedCommand;
         public RelayCommand DoubleTappedCommand =>
             _doubleTappedCommand ?? (_doubleTappedCommand = new RelayCommand(
-                async () => {
+                () => {
                     DisplayFileFolderItem i = ListSelectedItem as DisplayFileFolderItem;
                     Debug.WriteLine("Double tapped");
                     if (i != null && i.IsFolder)
