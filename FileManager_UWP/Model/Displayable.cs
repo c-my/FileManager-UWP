@@ -12,7 +12,11 @@ namespace FileManager_UWP.Model {
         public abstract BitmapImage Icon { get; }
 
         public int CompareTo(object obj) {
-            throw new NotImplementedException();
+            if (obj is Displayable another) {
+                return Name.CompareTo(another.Name);
+            }
+
+            throw new NotSupportedException();
         }
     }
 }

@@ -118,9 +118,14 @@ namespace FileManager_UWP.Service {
         /// <param name="path">路径</param>
         /// <returns>文件和文件夹列表</returns>
         public async Task<List<Displayable>> GetDisplayFileFolderList(string path) {
+            List<Displayable> ans;
             if (path == "/")
-                return await GetDiskDrivesAsync();
-            return await GetRegularFilesAsync(path);
+                ans = await GetDiskDrivesAsync();
+            else
+                ans = await GetRegularFilesAsync(path);
+            ans.Sort();
+
+            return ans;
         }
     }
 }
