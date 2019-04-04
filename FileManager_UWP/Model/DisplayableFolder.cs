@@ -27,9 +27,9 @@ namespace FileManager_UWP.Model
         }
 
         public static async Task<Displayable> GetParentAsync(StorageFolder f) {
-            string path = f.Path;
+            string path = System.IO.Path.GetDirectoryName(f.Path);
             BitmapImage img = new BitmapImage();
-            if (path.Length > 4) {
+            if (path != null) {
                 path = f.Path.Substring(0, f.Path.LastIndexOf('\\'));
                 StorageFolder file = await StorageFolder.GetFolderFromPathAsync(path);
                 var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 32);

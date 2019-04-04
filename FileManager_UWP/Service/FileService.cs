@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Custom;
@@ -30,39 +32,50 @@ namespace FileManager_UWP.Service {
         /// <returns></returns>
         private async Task<List<Displayable>> GetRegularFilesAsync(string path) {
             StorageFolder folder = null;
-            try
-            {
+            try {
                 folder = await StorageFolder.GetFolderFromPathAsync(path);
-                IReadOnlyList<StorageFolder> folders = await folder.GetFoldersAsync();
-                IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
-                List<Displayable> displayFileFolderItems =
-                    new List<Displayable> { await DisplayableFolder.GetParentAsync(folder) };
-                //displayFileFolderItems.AddRange(folders
-                //    .Select(async i => await DisplayFileFolderItem.GetInstance(i))
-                //    .Select(i => i.Result)
-                //);
-                //displayFileFolderItems.AddRange(files
-                //    .Select(async i => await DisplayFileFolderItem.GetInstance(i))
-                //    .Select(i => i.Result)
-                //);
-
-                foreach (var file in folders) {
-                    displayFileFolderItems.Add(
-                        await DisplayableFolder.GetInstanceAsync(file));
-                }
-
-                foreach (var file in files) {
-                    displayFileFolderItems.Add(
-                        await DisplayableFile.GetInstanceAsync(file));
-                }
-
-                return displayFileFolderItems;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
+            } catch (FileNotFoundException e) {
+                Debug.WriteLine(e.Message);
+                throw;
+            } catch (AuthenticationException e) {
+                Debug.WriteLine(e.Message);
                 throw;
             }
+
+            // 打开文件夹
+            List<Displayable> displayFileFolderItems =
+                new List<Displayable> {await DisplayableFolder.GetParentAsync(folder)};
+
+            // 读取配置文件
+            try {
+                //StorageFile.GetFileFromPathAsync(Path.GetPathRoot());
+            } catch (FileNotFoundException e) {
+
+            }
+
+            IReadOnlyList<StorageFolder> folders = await folder.GetFoldersAsync();
+            IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
+            //displayFileFolderItems.AddRange(folders
+            //    .Select(async i => await DisplayFileFolderItem.GetInstance(i))
+            //    .Select(i => i.Result)
+            //);
+            //displayFileFolderItems.AddRange(files
+            //    .Select(async i => await DisplayFileFolderItem.GetInstance(i))
+            //    .Select(i => i.Result)
+            //);
+
+            foreach (var file in folders) {
+                displayFileFolderItems.Add(
+                    await DisplayableFolder.GetInstanceAsync(file));
+            }
+
+            foreach (var file in files) {
+                displayFileFolderItems.Add(
+                    await DisplayableFile.GetInstanceAsync(file));
+            }
+
+            return displayFileFolderItems;
+            
         }
 
         private async Task<List<Displayable>> GetDiskDrivesAsync() {
