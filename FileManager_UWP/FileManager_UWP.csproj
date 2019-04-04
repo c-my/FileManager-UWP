@@ -127,6 +127,7 @@
     <Compile Include="Model\DisplayFileFolderItem.cs" />
     <Compile Include="Model\Displayable.cs" />
     <Compile Include="Service\FileService.cs" />
+    <Compile Include="Service\IconServer.cs" />
     <Compile Include="ViewModel\FileListViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="View\FileListView.xaml.cs">

@@ -7,9 +7,12 @@ using System.Linq;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Data.Json;
 using Windows.Devices.Custom;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Web.Http.Headers;
+using Type = FileManager_UWP.Model.Type;
 
 namespace FileManager_UWP.Service {
     internal interface IFileService {
@@ -47,10 +50,27 @@ namespace FileManager_UWP.Service {
                 new List<Displayable> {await DisplayableFolder.GetParentAsync(folder)};
 
             // 读取配置文件
-            try {
-                //StorageFile.GetFileFromPathAsync(Path.GetPathRoot());
-            } catch (FileNotFoundException e) {
-
+            string confPath = folder.Path;
+            if (confPath.EndsWith('\\'))
+                confPath += ".awesomefilemanager";
+            else
+                confPath += "\\.awesomefilemanager";
+            try
+            {
+                StorageFile confFile = await StorageFile.GetFileFromPathAsync(confPath);
+                string jsonString = await FileIO.ReadTextAsync(confFile);
+                JsonObject jsonObject = JsonObject.Parse(jsonString);
+                JsonArray virtualFolders = jsonObject.GetNamedArray("virtual_folders");
+                foreach (var jsonValue in virtualFolders) {
+                    var virtualFolder = jsonValue.GetObject();
+                    displayFileFolderItems.Add(new DisplayableSpecial(
+                        virtualFolder.GetNamedString("name"), 
+                        "", 
+                        Type.VirtualFolder, 
+                        await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)));
+                }
+            } catch (FileNotFoundException) {
+                Debug.WriteLine("no configure file in " + confPath);
             }
 
             IReadOnlyList<StorageFolder> folders = await folder.GetFoldersAsync();
@@ -78,6 +98,10 @@ namespace FileManager_UWP.Service {
             
         }
 
+        /// <summary>
+        /// 获得磁盘驱动器列表
+        /// </summary>
+        /// <returns></returns>
         private async Task<List<Displayable>> GetDiskDrivesAsync() {
             var drives = System.IO.DriveInfo.GetDrives();
             List<Displayable> ans = new List<Displayable>();
