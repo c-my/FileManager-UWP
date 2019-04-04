@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Type = FileManager_UWP.Model.Type;
 
 namespace FileManager_UWP.ViewModel {
     public class FileListViewModel : ViewModelBase {
@@ -21,8 +22,8 @@ namespace FileManager_UWP.ViewModel {
         /// <summary>
         /// 文件和文件夹列表
         /// </summary>
-        private IEnumerable<IDisplayable> _displayFileFolderItems;
-        public IEnumerable<IDisplayable> DisplayFileFolderItems {
+        private IEnumerable<Displayable> _displayFileFolderItems;
+        public IEnumerable<Displayable> DisplayFileFolderItems {
             get => _displayFileFolderItems;
             set => Set(nameof(DisplayFileFolderItems), ref _displayFileFolderItems, value);
         }
@@ -68,9 +69,9 @@ namespace FileManager_UWP.ViewModel {
             _doubleTappedCommand ?? (_doubleTappedCommand = new RelayCommand(
                 () =>
                 {
-                    IDisplayable i = ListSelectedItem as IDisplayable;
+                    Displayable i = ListSelectedItem as Displayable;
                     Debug.WriteLine("Double tapped");
-                    if (i != null && i.IsFolder)
+                    if (i != null && (i.Type == Type.Folder || i.Type == Type.Disk))
                     {
                         Debug.WriteLine("double tapped: " + i.Name);
                         Path = i.Path;

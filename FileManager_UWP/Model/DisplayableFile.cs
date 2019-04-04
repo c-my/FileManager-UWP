@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FileManager_UWP.Model
 {
-    public class DisplayableFile: IDisplayable {
+    public class DisplayableFile: Displayable {
         private readonly StorageFile _file;
         private readonly BitmapImage _icon;
 
@@ -25,12 +25,12 @@ namespace FileManager_UWP.Model
             return obj;
         }
 
-        public string Name => _file.Name;
+        public override string Name => _file.Name;
 
-        public string Path => _file.Path;
+        public override string Path => _file.Path;
 
-        public bool IsFolder => false;
+        public override Type Type => Type.File;
 
-        public BitmapImage Icon => _icon;
+        public override BitmapImage Icon => _icon;
     }
 }

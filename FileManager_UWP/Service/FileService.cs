@@ -16,7 +16,7 @@ namespace FileManager_UWP.Service {
         /// </summary>
         /// <param name="path">路径</param>
         /// <returns>文件和文件夹列表</returns>
-        Task<List<IDisplayable>> GetDisplayFileFolderList(string path);
+        Task<List<Displayable>> GetDisplayFileFolderList(string path);
     }
 
     /// <summary>
@@ -28,15 +28,15 @@ namespace FileManager_UWP.Service {
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        private async Task<List<IDisplayable>> GetRegularFilesAsync(string path) {
+        private async Task<List<Displayable>> GetRegularFilesAsync(string path) {
             StorageFolder folder = null;
             try
             {
                 folder = await StorageFolder.GetFolderFromPathAsync(path);
                 IReadOnlyList<StorageFolder> folders = await folder.GetFoldersAsync();
                 IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
-                List<IDisplayable> displayFileFolderItems =
-                    new List<IDisplayable> { await DisplayableFolder.GetParentAsync(folder) };
+                List<Displayable> displayFileFolderItems =
+                    new List<Displayable> { await DisplayableFolder.GetParentAsync(folder) };
                 //displayFileFolderItems.AddRange(folders
                 //    .Select(async i => await DisplayFileFolderItem.GetInstance(i))
                 //    .Select(i => i.Result)
@@ -65,9 +65,9 @@ namespace FileManager_UWP.Service {
             }
         }
 
-        private async Task<List<IDisplayable>> GetDiskDrivesAsync() {
+        private async Task<List<Displayable>> GetDiskDrivesAsync() {
             var drives = System.IO.DriveInfo.GetDrives();
-            List<IDisplayable> ans = new List<IDisplayable>();
+            List<Displayable> ans = new List<Displayable>();
             foreach (var d in drives)
             {
                 ans.Add(await DisplayableDisk.GetInstance(d));
@@ -80,7 +80,7 @@ namespace FileManager_UWP.Service {
         /// </summary>
         /// <param name="path">路径</param>
         /// <returns>文件和文件夹列表</returns>
-        public async Task<List<IDisplayable>> GetDisplayFileFolderList(string path) {
+        public async Task<List<Displayable>> GetDisplayFileFolderList(string path) {
             if (path == "/")
                 return await GetDiskDrivesAsync();
             return await GetRegularFilesAsync(path);

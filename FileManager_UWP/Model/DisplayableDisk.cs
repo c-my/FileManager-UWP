@@ -11,9 +11,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FileManager_UWP.Model
 {
-    public class DisplayableDisk: IDisplayable {
+    public class DisplayableDisk: Displayable {
         private readonly DriveInfo _drive;
-        private BitmapImage _icon = new BitmapImage();
+        private readonly BitmapImage _icon = new BitmapImage();
 
         private DisplayableDisk(DriveInfo d) {
             _drive = d;
@@ -29,9 +29,9 @@ namespace FileManager_UWP.Model
         }
 
 
-        public string Name => _drive.Name;
-        public string Path => _drive.Name;
-        public BitmapImage Icon => _icon;
-        public bool IsFolder => true;
+        public override string Name => _drive.Name;
+        public override string Path => _drive.Name;
+        public override BitmapImage Icon => _icon;
+        public override Type Type => Type.Disk;
     }
 }

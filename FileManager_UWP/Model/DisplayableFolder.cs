@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FileManager_UWP.Model
 {
-    public class DisplayableFolder: IDisplayable {
+    public class DisplayableFolder: Displayable {
         private readonly StorageFolder _folder;
         private readonly BitmapImage _icon;
 
@@ -26,7 +26,7 @@ namespace FileManager_UWP.Model
             return obj;
         }
 
-        public static async Task<IDisplayable> GetParentAsync(StorageFolder f) {
+        public static async Task<Displayable> GetParentAsync(StorageFolder f) {
             string path = f.Path;
             BitmapImage img = new BitmapImage();
             if (path.Length > 4) {
@@ -34,21 +34,21 @@ namespace FileManager_UWP.Model
                 StorageFolder file = await StorageFolder.GetFolderFromPathAsync(path);
                 var thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 32);
                 await img.SetSourceAsync(thumbnail).AsTask();
-                return new DisplayableSpecial("..", file.Path, true, img);
+                return new DisplayableSpecial("..", file.Path, Model.Type.Folder, img);
             }
             else {
                 var thumbnail = await f.GetThumbnailAsync(ThumbnailMode.ListView, 32);
                 await img.SetSourceAsync(thumbnail).AsTask();
-                return new DisplayableSpecial("..", "/", true, img);
+                return new DisplayableSpecial("..", "/", Model.Type.Folder, img);
             }
         }
 
-        public string Name => _folder.Name;
+        public override string Name => _folder.Name;
 
-        public string Path => _folder.Path;
+        public override string Path => _folder.Path;
 
-        public bool IsFolder => true;
+        public override Type Type => Type.Folder;
 
-        public BitmapImage Icon => _icon;
+        public override BitmapImage Icon => _icon;
     }
 }

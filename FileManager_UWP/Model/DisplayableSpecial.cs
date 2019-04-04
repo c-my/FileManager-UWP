@@ -7,17 +7,17 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FileManager_UWP.Model
 {
-    public class DisplayableSpecial: IDisplayable {
-        public DisplayableSpecial(string name, string path, bool isFolder, BitmapImage icon)
+    public class DisplayableSpecial: Displayable {
+        public DisplayableSpecial(string name, string path, Type type, BitmapImage icon)
         {
             Name = name;
             Path = path;
-            IsFolder = isFolder;
+            Type = type;
             Icon = icon;
         }
-        public string Name { get; }
-        public string Path { get; }
-        public bool IsFolder { get; }
-        public BitmapImage Icon { get; }
+        public override string Name { get; }
+        public override string Path { get; }
+        public override Type Type { get; }
+        public override BitmapImage Icon { get; }
     }
 }
