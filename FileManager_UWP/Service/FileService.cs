@@ -5,22 +5,33 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Custom;
 using Windows.Storage;
 using Windows.Web.Http.Headers;
 
 namespace FileManager_UWP.Service {
-    /// <summary>
-    /// 负责提供本地文件及文件夹访问服务
-    /// </summary>
-    class FileService {
+    internal interface IFileService {
         /// <summary>
         /// 获得可显示的目录
         /// </summary>
         /// <param name="path">路径</param>
         /// <returns>文件和文件夹列表</returns>
-        public async Task<List<IDisplayable>> GetDisplayFileFolderList(string path) {
+        Task<List<IDisplayable>> GetDisplayFileFolderList(string path);
+    }
+
+    /// <summary>
+    /// 负责提供本地文件及文件夹访问服务
+    /// </summary>
+    class FileService : IFileService {
+        /// <summary>
+        /// 获得普通文件夹中的文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private async Task<List<IDisplayable>> GetRegularFilesAsync(string path) {
             StorageFolder folder = null;
-            try {
+            try
+            {
                 folder = await StorageFolder.GetFolderFromPathAsync(path);
                 IReadOnlyList<StorageFolder> folders = await folder.GetFoldersAsync();
                 IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
@@ -46,10 +57,33 @@ namespace FileManager_UWP.Service {
                 }
 
                 return displayFileFolderItems;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Debug.WriteLine(ex.Message);
                 throw;
             }
+        }
+
+        private async Task<List<IDisplayable>> GetDiskDrivesAsync() {
+            var drives = System.IO.DriveInfo.GetDrives();
+            List<IDisplayable> ans = new List<IDisplayable>();
+            foreach (var d in drives)
+            {
+                ans.Add(await DisplayableDisk.GetInstance(d));
+            }
+
+            return ans;
+        }
+        /// <summary>
+        /// 获得可显示的目录
+        /// </summary>
+        /// <param name="path">路径</param>
+        /// <returns>文件和文件夹列表</returns>
+        public async Task<List<IDisplayable>> GetDisplayFileFolderList(string path) {
+            if (path == "/")
+                return await GetDiskDrivesAsync();
+            return await GetRegularFilesAsync(path);
         }
     }
 }
