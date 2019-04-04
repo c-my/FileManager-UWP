@@ -71,9 +71,7 @@ namespace FileManager_UWP.ViewModel {
                 {
                     Displayable i = ListSelectedItem as Displayable;
                     Debug.WriteLine("Double tapped");
-                    if (i != null && (i.Type == Type.Folder || i.Type == Type.Disk))
-                    {
-                        Debug.WriteLine("double tapped: " + i.Name);
+                    if (i != null && (i.Type != Type.File)) {
                         Path = i.Path;
                         RefreshCommand.Execute(null);
                     }
