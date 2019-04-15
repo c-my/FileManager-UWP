@@ -51,7 +51,12 @@ namespace FileManager_UWP.Service {
                 }
                 var displayFileFolderItems = new List<Displayable>
                 {
-                    await DisplayableFolder.GetParentAsync(folder)
+                    new DisplayableSpecial(
+                        "..",
+                        directoryName,
+                        Type.Folder,
+                        await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)
+                        )
                 };
 
                 var confFile = await StorageFile.GetFileFromPathAsync(confPath);
@@ -65,18 +70,6 @@ namespace FileManager_UWP.Service {
                         await GetRegularFilesAsync(virtualFolder, false)
                     );
                 }
-
-                //var jsonObject = JsonObject.Parse(jsonString);
-                //var virtualFolders = jsonObject.GetNamedObject("virtual_folders");
-                //var virtualFolder = virtualFolders.GetNamedObject(virtualFolderName);
-                //var includeArray = virtualFolder.GetNamedArray("include");
-                //foreach (var jsonValue in includeArray) {
-                //    var realFolderPath = jsonValue.GetString();
-                //    displayFileFolderItems.AddRange(
-                //        await GetRegularFilesAsync(realFolderPath, false)
-                //    );
-                //}
-
                 return displayFileFolderItems;
             } catch (FileNotFoundException) {
                 Debug.WriteLine("no configure file in " + confPath);
@@ -128,14 +121,6 @@ namespace FileManager_UWP.Service {
                         Type.VirtualFolder, 
                         await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)));
                 }
-                //var jsonObject = JsonObject.Parse(jsonString);
-                //var virtualFolders = jsonObject.GetNamedObject("virtual_folders");
-                //foreach (var virtualFolder in virtualFolders)
-                //    displayFileFolderItems.Add(new DisplayableSpecial(
-                //        virtualFolder.Key,
-                //        confPath + "|" + virtualFolder.Key,
-                //        Type.VirtualFolder,
-                //        await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)));
             } catch (FileNotFoundException) {
                 Debug.WriteLine("no configure file in " + confPath);
             }
