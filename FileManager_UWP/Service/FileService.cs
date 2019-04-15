@@ -12,6 +12,7 @@ using Windows.Devices.Custom;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Web.Http.Headers;
+using Newtonsoft.Json;
 using Type = FileManager_UWP.Model.Type;
 
 namespace FileManager_UWP.Service {
@@ -55,16 +56,26 @@ namespace FileManager_UWP.Service {
 
                 var confFile = await StorageFile.GetFileFromPathAsync(confPath);
                 var jsonString = await FileIO.ReadTextAsync(confFile);
-                var jsonObject = JsonObject.Parse(jsonString);
-                var virtualFolders = jsonObject.GetNamedObject("virtual_folders");
-                var virtualFolder = virtualFolders.GetNamedObject(virtualFolderName);
-                var includeArray = virtualFolder.GetNamedArray("include");
-                foreach (var jsonValue in includeArray) {
-                    var realFolderPath = jsonValue.GetString();
+
+                FolderSetting folderSetting = JsonConvert.DeserializeObject<FolderSetting>(jsonString);
+                foreach (var virtualFolder in 
+                    folderSetting.VirtualFolders.Find(x => x.Name == virtualFolderName).Includes)
+                {
                     displayFileFolderItems.AddRange(
-                        await GetRegularFilesAsync(realFolderPath, false)
+                        await GetRegularFilesAsync(virtualFolder, false)
                     );
                 }
+
+                //var jsonObject = JsonObject.Parse(jsonString);
+                //var virtualFolders = jsonObject.GetNamedObject("virtual_folders");
+                //var virtualFolder = virtualFolders.GetNamedObject(virtualFolderName);
+                //var includeArray = virtualFolder.GetNamedArray("include");
+                //foreach (var jsonValue in includeArray) {
+                //    var realFolderPath = jsonValue.GetString();
+                //    displayFileFolderItems.AddRange(
+                //        await GetRegularFilesAsync(realFolderPath, false)
+                //    );
+                //}
 
                 return displayFileFolderItems;
             } catch (FileNotFoundException) {
@@ -78,8 +89,9 @@ namespace FileManager_UWP.Service {
         /// 获得普通文件夹中的文件
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="withParent"></param>
         /// <returns></returns>
-        private async Task<List<Displayable>> GetRegularFilesAsync(string path, bool withParent = true) {
+        private async Task<List<Displayable>> GetRegularFilesAsync(string path, bool withParent=true) {
             StorageFolder folder = null;
             try {
                 folder = await StorageFolder.GetFolderFromPathAsync(path);
@@ -108,14 +120,22 @@ namespace FileManager_UWP.Service {
             try {
                 var confFile = await StorageFile.GetFileFromPathAsync(confPath);
                 var jsonString = await FileIO.ReadTextAsync(confFile);
-                var jsonObject = JsonObject.Parse(jsonString);
-                var virtualFolders = jsonObject.GetNamedObject("virtual_folders");
-                foreach (var virtualFolder in virtualFolders)
+                FolderSetting folderSetting = JsonConvert.DeserializeObject<FolderSetting>(jsonString);
+                foreach (var virtualFolder in folderSetting.VirtualFolders) {
                     displayFileFolderItems.Add(new DisplayableSpecial(
-                        virtualFolder.Key,
-                        confPath + "|" + virtualFolder.Key,
-                        Type.VirtualFolder,
+                        virtualFolder.Name, 
+                        confPath + "|" + virtualFolder.Name, 
+                        Type.VirtualFolder, 
                         await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)));
+                }
+                //var jsonObject = JsonObject.Parse(jsonString);
+                //var virtualFolders = jsonObject.GetNamedObject("virtual_folders");
+                //foreach (var virtualFolder in virtualFolders)
+                //    displayFileFolderItems.Add(new DisplayableSpecial(
+                //        virtualFolder.Key,
+                //        confPath + "|" + virtualFolder.Key,
+                //        Type.VirtualFolder,
+                //        await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)));
             } catch (FileNotFoundException) {
                 Debug.WriteLine("no configure file in " + confPath);
             }
