@@ -11,6 +11,5 @@ namespace FileManager_UWP.View {
             DataContext = vm;
             vm.RefreshCommand.Execute(null);
         }
-
     }
 }

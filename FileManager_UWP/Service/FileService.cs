@@ -15,8 +15,10 @@ using Windows.Web.Http.Headers;
 using Newtonsoft.Json;
 using Type = FileManager_UWP.Model.Type;
 
-namespace FileManager_UWP.Service {
-    internal interface IFileService {
+namespace FileManager_UWP.Service
+{
+    internal interface IFileService
+    {
         /// <summary>
         /// 获得可显示的目录
         /// </summary>
@@ -28,8 +30,10 @@ namespace FileManager_UWP.Service {
     /// <summary>
     /// 负责提供本地文件及文件夹访问服务
     /// </summary>
-    internal class FileService : IFileService {
-        private async Task<List<Displayable>> GetVirtualFolderAsync(string path) {
+    internal class FileService : IFileService
+    {
+        private async Task<List<Displayable>> GetVirtualFolderAsync(string path)
+        {
             var splitList = path.Split('|');
             var virtualFolderName = splitList[1];
             path = splitList[0];
@@ -42,11 +46,15 @@ namespace FileManager_UWP.Service {
                 confPath += ".awesomefilemanager";
             else
                 confPath += "\\.awesomefilemanager";
-            try {
+            try
+            {
                 StorageFolder folder;
-                try {
+                try
+                {
                     folder = await StorageFolder.GetFolderFromPathAsync(directoryName);
-                } catch (FileNotFoundException e) {
+                }
+                catch (FileNotFoundException e)
+                {
                     throw;
                 }
                 var displayFileFolderItems = new List<Displayable>
@@ -63,7 +71,7 @@ namespace FileManager_UWP.Service {
                 var jsonString = await FileIO.ReadTextAsync(confFile);
 
                 FolderSetting folderSetting = JsonConvert.DeserializeObject<FolderSetting>(jsonString);
-                foreach (var virtualFolder in 
+                foreach (var virtualFolder in
                     folderSetting.VirtualFolders.Find(x => x.Name == virtualFolderName).Includes)
                 {
                     displayFileFolderItems.AddRange(
@@ -71,7 +79,9 @@ namespace FileManager_UWP.Service {
                     );
                 }
                 return displayFileFolderItems;
-            } catch (FileNotFoundException) {
+            }
+            catch (FileNotFoundException)
+            {
                 Debug.WriteLine("no configure file in " + confPath);
 
                 throw;
@@ -84,15 +94,26 @@ namespace FileManager_UWP.Service {
         /// <param name="path"></param>
         /// <param name="withParent"></param>
         /// <returns></returns>
-        private async Task<List<Displayable>> GetRegularFilesAsync(string path, bool withParent=true) {
+        private async Task<List<Displayable>> GetRegularFilesAsync(string path, bool withParent = true)
+        {
             StorageFolder folder = null;
-            try {
+            try
+            {
                 folder = await StorageFolder.GetFolderFromPathAsync(path);
-            } catch (Exception e) {
+            }
+            catch (System.UnauthorizedAccessException e)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
                 Debug.WriteLine(e.Message + " " + path + " try to get Virtual Folder");
-                try {
+                try
+                {
                     return await GetVirtualFolderAsync(path);
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     Debug.WriteLine(e.Message);
 
                     throw;
@@ -110,18 +131,22 @@ namespace FileManager_UWP.Service {
                 confPath += ".awesomefilemanager";
             else
                 confPath += "\\.awesomefilemanager";
-            try {
+            try
+            {
                 var confFile = await StorageFile.GetFileFromPathAsync(confPath);
                 var jsonString = await FileIO.ReadTextAsync(confFile);
                 FolderSetting folderSetting = JsonConvert.DeserializeObject<FolderSetting>(jsonString);
-                foreach (var virtualFolder in folderSetting.VirtualFolders) {
+                foreach (var virtualFolder in folderSetting.VirtualFolders)
+                {
                     displayFileFolderItems.Add(new DisplayableSpecial(
-                        virtualFolder.Name, 
-                        confPath + "|" + virtualFolder.Name, 
-                        Type.VirtualFolder, 
+                        virtualFolder.Name,
+                        confPath + "|" + virtualFolder.Name,
+                        Type.VirtualFolder,
                         await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)));
                 }
-            } catch (FileNotFoundException) {
+            }
+            catch (FileNotFoundException)
+            {
                 Debug.WriteLine("no configure file in " + confPath);
             }
 
@@ -151,7 +176,8 @@ namespace FileManager_UWP.Service {
         /// 获得磁盘驱动器列表
         /// </summary>
         /// <returns></returns>
-        private async Task<List<Displayable>> GetDiskDrivesAsync() {
+        private async Task<List<Displayable>> GetDiskDrivesAsync()
+        {
             var drives = DriveInfo.GetDrives();
             var ans = new List<Displayable>();
             foreach (var d in drives) ans.Add(await DisplayableDisk.GetInstance(d));
@@ -164,15 +190,20 @@ namespace FileManager_UWP.Service {
         /// </summary>
         /// <param name="path">路径</param>
         /// <returns>文件和文件夹列表</returns>
-        public async Task<List<Displayable>> GetDisplayFileFolderList(string path) {
-            List<Displayable> ans;
-            if (path == "/")
-                ans = await GetDiskDrivesAsync();
-            else
-                ans = await GetRegularFilesAsync(path);
-            ans.Sort();
+        public async Task<List<Displayable>> GetDisplayFileFolderList(string path)
+        {
+            try {
+                List<Displayable> ans;
+                if (path == "/")
+                    ans = await GetDiskDrivesAsync();
+                else
+                    ans = await GetRegularFilesAsync(path);
+                ans.Sort();
+                return ans;
 
-            return ans;
+            } catch (Exception) {
+                throw;
+            }
         }
     }
 }
