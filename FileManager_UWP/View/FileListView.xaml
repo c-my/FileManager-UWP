@@ -65,6 +65,10 @@
                             Style="{ThemeResource BaseTextBlockStyle}" 
                             Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
                             Margin="12,0,0,0"/>
+                        <ItemsRepeater>
+                            
+                        </ItemsRepeater> 
+                        
                     </StackPanel>
                     
                 </DataTemplate>

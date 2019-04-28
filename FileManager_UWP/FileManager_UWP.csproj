@@ -124,7 +124,6 @@
     <Compile Include="Model\DisplayableFile.cs" />
     <Compile Include="Model\DisplayableFolder.cs" />
     <Compile Include="Model\DisplayableSpecial.cs" />
-    <Compile Include="Model\DisplayFileFolderItem.cs" />
     <Compile Include="Model\Displayable.cs" />
     <Compile Include="Model\FolderSetting.cs" />
     <Compile Include="Model\VirtualFolder.cs" />
@@ -203,7 +202,9 @@
       <Version>4.3.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controls\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

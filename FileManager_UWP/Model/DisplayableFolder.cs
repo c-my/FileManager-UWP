@@ -12,10 +12,12 @@ namespace FileManager_UWP.Model
     public class DisplayableFolder: Displayable {
         private readonly StorageFolder _folder;
         private readonly BitmapImage _icon;
+        private readonly List<String> _labels;
 
         private DisplayableFolder(StorageFolder f) {
             _folder = f;
             _icon = new BitmapImage();
+            _labels = new List<string>();
         }
 
         public static async Task<DisplayableFolder> GetInstanceAsync(StorageFolder f)
@@ -44,11 +46,9 @@ namespace FileManager_UWP.Model
         }
 
         public override string Name => _folder.Name;
-
         public override string Path => _folder.Path;
-
         public override Type Type => Type.Folder;
-
         public override BitmapImage Icon => _icon;
+        public override List<String> Labels => _labels;
     }
 }
