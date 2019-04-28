@@ -65,12 +65,21 @@
                             Style="{ThemeResource BaseTextBlockStyle}" 
                             Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
                             Margin="12,0,0,0"/>
-                        <ItemsRepeater>
-                            
-                        </ItemsRepeater> 
-                        
+                        <ListView 
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.HorizontalScrollMode="Enabled"                  
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            ItemsSource="{Binding Labels}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="{Binding}"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </StackPanel>
-                    
                 </DataTemplate>
             </ListView.ItemTemplate>
 
