@@ -20,7 +20,7 @@ namespace FileManager_UWP.Model
 
         public static async Task<DisplayableFile> GetInstanceAsync(StorageFile f) {
             DisplayableFile obj = new DisplayableFile(f);
-            var thumbnail = await f.GetThumbnailAsync(ThumbnailMode.ListView, 32);
+            var thumbnail = await f.GetThumbnailAsync(ThumbnailMode.SingleItem, 32);
             await obj._icon.SetSourceAsync(thumbnail).AsTask();
             return obj;
         }

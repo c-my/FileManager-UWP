@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FileManager_UWP.Model {
     public enum Type{
-        File, Folder, Disk, VirtualFolder
+        Folder = 0, VirtualFolder, Disk, File
     }
     public abstract class Displayable : IComparable {
         public abstract string Name { get; }
@@ -12,6 +12,9 @@ namespace FileManager_UWP.Model {
         public abstract BitmapImage Icon { get; }
 
         public int CompareTo(object obj) {
+
+            if (this.Type != (obj as Displayable).Type)
+                return this.Type - (obj as Displayable).Type;
             if (obj is Displayable another) {
                 return Name.CompareTo(another.Name);
             }
