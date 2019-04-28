@@ -13,6 +13,15 @@
         <TextBlock
             FontSize="50"
             Text="Test Label View" />
-        <controls:LabelListControl></controls:LabelListControl>
+        <Button FontSize="20" Content="加" Click="Button_Click"></Button>
+        <!--<ListView ItemsSource="{x:Bind Labels}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+        
+        <controls:LabelListControl ItemsSource="{x:Bind Labels}"></controls:LabelListControl>
     </StackPanel>
 </Page>

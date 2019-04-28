@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -20,8 +22,16 @@ namespace FileManager_UWP.View {
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class TestLabelView: Page {
+        public ObservableCollection<string> Labels = new ObservableCollection<string>{ "miao", "ddd" };
+
         public TestLabelView() {
             this.InitializeComponent();
+            Debug.WriteLine(Labels.ToString());
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            Labels.Add("KKK");
+            Debug.WriteLine(Labels.Count.ToString());
         }
     }
 }
