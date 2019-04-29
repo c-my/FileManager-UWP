@@ -28,6 +28,8 @@ namespace FileManager_UWP.Controls {
         private Storyboard _expand_story_board = new Storyboard();
         private Duration _animate_during = new Duration(TimeSpan.FromMilliseconds(200));
         private Canvas labelListCanvas;
+        private bool _adding_new_label = false;
+        private bool _hovering = false;
 
 
         private ResourceDictionary genericResourceDictionary;
@@ -71,6 +73,7 @@ namespace FileManager_UWP.Controls {
         /// 当ItemsSource改变时，绘制标签，注册动画
         /// </summary>
         private void update() {
+            Debug.WriteLine("ObservableCollection update");
             var itemsSource = ItemsSource as ObservableCollection<LabelItem>;
 
             labelListCanvas.Children.Clear();
@@ -136,9 +139,32 @@ namespace FileManager_UWP.Controls {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Add_Click(object sender, RoutedEventArgs e) {
+            Debug.WriteLine("Click Add Label");
             Button b = sender as Button;
-            Debug.WriteLine(b.Content);
+            TextBox textBox = new TextBox();
+            textBox.Height = b.ActualHeight;
+            textBox.FontSize = b.FontSize;
+            textBox.BorderThickness = new Thickness(0);
+            textBox.Padding = new Thickness(4, 4, 4, 4);
+            textBox.Margin = new Thickness(0, 0, 0, 0);
+            textBox.GotFocus += TextBox_GotFocus;
+            textBox.LostFocus += TextBox_LostFocus;
+            b.Content = textBox;
         }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e) {
+            _adding_new_label = false;
+            TextBox tb = sender as TextBox;
+            if (tb.Text.Count() != 0)
+                (ItemsSource as ObservableCollection<LabelItem>).Add(new LabelItem(tb.Text));
+            if (!_hovering)
+                LabelListCanvas_PointerExited(null, null);
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e) {
+            _adding_new_label = true;
+        }
+
         /// <summary>
         /// 动画完成
         /// </summary>
@@ -152,6 +178,7 @@ namespace FileManager_UWP.Controls {
         /// </summary>
         private void measure() {
             Button lb = labelListCanvas.Children.Last() as Button;
+            lb.Content = "+";
             labelListCanvas.Height = lb.ActualHeight;
             double left = (double)lb.GetValue(Canvas.LeftProperty);
             labelListCanvas.Width = left + lb.ActualWidth;
@@ -162,10 +189,14 @@ namespace FileManager_UWP.Controls {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void LabelListCanvas_PointerExited(object sender, PointerRoutedEventArgs e) {
-            _collpse_story_board.Begin();
-            for (int i = 0; i < labelListCanvas.Children.Count - 2; i++) {
-                Button b = labelListCanvas.Children[i] as Button;
-                b.Content = String.Format("{0}...", (b.Content as string)[0]);
+            _hovering = false;
+            // 正在输入新标签时不折叠
+            if (!_adding_new_label) {
+                _collpse_story_board.Begin();
+                for (int i = 0; i < labelListCanvas.Children.Count - 2; i++) {
+                    Button b = labelListCanvas.Children[i] as Button;
+                    b.Content = String.Format("{0}...", (b.Content as string)[0]);
+                }
             }
         }
         /// <summary>
@@ -174,11 +205,14 @@ namespace FileManager_UWP.Controls {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void LabelListCanvas_PointerEntered(object sender, PointerRoutedEventArgs e) {
-            _expand_story_board.Begin();
-            var labels = ItemsSource as ObservableCollection<LabelItem>;
-            for (int i = 0; i < labels.Count - 1; i++) {
-                Button b = labelListCanvas.Children[i] as Button;
-                b.Content = labels[i].tag;
+            _hovering = true;
+            if (!_adding_new_label) {
+                _expand_story_board.Begin();
+                var labels = ItemsSource as ObservableCollection<LabelItem>;
+                for (int i = 0; i < labels.Count - 1; i++) {
+                    Button b = labelListCanvas.Children[i] as Button;
+                    b.Content = labels[i].tag;
+                }
             }
         }
 
