@@ -27,6 +27,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:LabelListControl">
                     <Button Name="LabelListPresenter">
+                        <Button.Resources>
+                            <ResourceDictionary>
+                                <SolidColorBrush x:Key="ButtonBackground" Color="Transparent"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                            </ResourceDictionary>
+                        </Button.Resources>
                         <Canvas Name="LabelListCanvas"></Canvas>
                     </Button>
                 </ControlTemplate>
