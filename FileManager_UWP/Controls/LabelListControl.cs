@@ -24,6 +24,10 @@ namespace FileManager_UWP.Controls {
         private Storyboard _collpse_story_board = new Storyboard();
         private Storyboard _expand_story_board = new Storyboard();
         private Duration _animate_during = new Duration(TimeSpan.FromMilliseconds(500));
+        private int _status = 0; // 0 展开， 1 动画， 2 折叠
+        private double _width, _height;
+        private Canvas labelListCanvas;
+
 
         private ResourceDictionary genericResourceDictionary;
         public LabelListControl() {
@@ -39,23 +43,23 @@ namespace FileManager_UWP.Controls {
         }
 
         private void update() {
-            TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
-            textBlock.Text = "测试自定义控件\n";
+            //TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
+            //textBlock.Text = "测试自定义控件\n";
             //listView.ItemsSource = ItemsSource;
             var itemsSource = ItemsSource as ObservableCollection<string>;
-            textBlock.Text += itemsSource.Count().ToString();
+            //textBlock.Text += itemsSource.Count().ToString();
 
-            Canvas labelListCanvas = (Canvas)GetTemplateChild("LabelListCanvas");
             //labelListCanvas.Children.Count;
             labelListCanvas.Children.Clear();
+            _collpse_story_board.Stop();
             _collpse_story_board.Children.Clear();
+            _expand_story_board.Stop();
             _expand_story_board.Children.Clear();
             int expanded_position = 0;
             foreach (string label in itemsSource) {
                 Button b = new Button();
                 b.Content = label;
                 //b.SetValue(Canvas.LeftProperty, labelListCanvas.Children.Count * _collpse_distance);
-                //b.Style = (Style)Application.Current.Resources["LabelButtonStyle"];
                 b.SetValue(Canvas.LeftProperty, expanded_position);
                 b.Style = (Style)genericResourceDictionary["LabelButtonStyle"];
 
@@ -63,6 +67,7 @@ namespace FileManager_UWP.Controls {
                 collpse_animate.From = labelListCanvas.Children.Count * 22;
                 collpse_animate.To = expanded_position;
                 collpse_animate.Duration = _animate_during;
+                collpse_animate.Completed += Animate_Completed;
                 _collpse_story_board.Children.Add(collpse_animate);
                 Storyboard.SetTarget(collpse_animate, b);
                 Storyboard.SetTargetProperty(collpse_animate, "(Canvas.Left)");
@@ -71,6 +76,7 @@ namespace FileManager_UWP.Controls {
                 expand_animate.From = collpse_animate.To;
                 expand_animate.To = collpse_animate.From;
                 expand_animate.Duration = _animate_during;
+                expand_animate.Completed += Animate_Completed;
                 _expand_story_board.Children.Add(expand_animate);
                 Storyboard.SetTarget(expand_animate, b);
                 Storyboard.SetTargetProperty(expand_animate, "(Canvas.Left)");
@@ -80,26 +86,44 @@ namespace FileManager_UWP.Controls {
             }
         }
 
+        private void Animate_Completed(object sender, object e) {
+            measure();
+        }
+
+        private void measure() {
+            Button lb = labelListCanvas.Children.Last() as Button;
+            labelListCanvas.Height = lb.ActualHeight;
+            double left = (double)lb.GetValue(Canvas.LeftProperty);
+            labelListCanvas.Width = left + lb.ActualHeight;
+        }
+
+        private void LabelListCanvas_PointerExited(object sender, PointerRoutedEventArgs e) {
+            _expand_story_board.Begin();
+            Debug.WriteLine(labelListCanvas.Width.ToString() + "," + labelListCanvas.Height.ToString());
+        }
+
+        private void LabelListCanvas_PointerEntered(object sender, PointerRoutedEventArgs e) {
+            _collpse_story_board.Begin();
+            //labelListCanvas.Width = labelListCanvas.ActualWidth;
+            //labelListCanvas.Height = 20;
+            Debug.WriteLine(labelListCanvas.Width.ToString() + "," + labelListCanvas.Height.ToString());
+        }
+
         private void init() {
             var itemsSource = ItemsSource as ObservableCollection<string>;
             itemsSource.CollectionChanged += ItemsSource_CollectionChanged;
-            TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
-            textBlock.Text = "测试自定义控件\nINIT";
+            Button labelListButton = (Button)GetTemplateChild("LabelListPresenter");
+            labelListButton.PointerEntered += LabelListCanvas_PointerEntered;
+            labelListButton.PointerExited += LabelListCanvas_PointerExited;
+            labelListCanvas = (Canvas)GetTemplateChild("LabelListCanvas");
+
+            //TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
+            //textBlock.Text = "测试自定义控件\nINIT";
         }
 
         protected override void OnApplyTemplate() {
             init();
             update();
-        }
-
-        protected override void OnPointerEntered(PointerRoutedEventArgs e) {
-            base.OnPointerEntered(e);
-            _collpse_story_board.Begin();
-        }
-
-        protected override void OnPointerExited(PointerRoutedEventArgs e) {
-            base.OnPointerExited(e);
-            _expand_story_board.Begin();
         }
     }
 }

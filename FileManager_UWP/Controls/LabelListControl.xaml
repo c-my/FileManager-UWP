@@ -10,12 +10,11 @@
                     <Grid x:Name="RootGrid" 
                           CornerRadius="10" 
                           Background="#40FF00" 
-                          Padding="2 2 2 2"
                           BorderThickness="1"
                           BorderBrush="Blue">
                         <ContentPresenter 
                             x:Name="ContentPresenter" 
-                            Margin="4 4 4 4" 
+                            Padding="4 4 4 4" 
                             />
                     </Grid>
                 </ControlTemplate>
@@ -27,13 +26,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:LabelListControl">
-                    <StackPanel>
-                        <TextBlock Name="LabelTextBlock"></TextBlock>
-                        <Button Style="{StaticResource LabelButtonStyle}">HEEEE</Button>
-                        <Canvas Name="LabelListCanvas">
-
-                        </Canvas>
-                    </StackPanel>
+                    <Button Name="LabelListPresenter">
+                        <Canvas Name="LabelListCanvas"></Canvas>
+                    </Button>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
