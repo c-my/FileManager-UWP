@@ -47,6 +47,26 @@ namespace FileManager_UWP.Controls {
             update();
         }
 
+        private void SetElasticAnimate(Button b, int expanded_position) {
+            DoubleAnimation expand_animate = new DoubleAnimation();
+            expand_animate.From = null; // labelListCanvas.Children.Count * 22;
+            expand_animate.To = expanded_position;
+            expand_animate.Duration = _animate_during;
+            //expand_animate.Completed += Animate_Completed;
+            _expand_story_board.Children.Add(expand_animate);
+            Storyboard.SetTarget(expand_animate, b);
+            Storyboard.SetTargetProperty(expand_animate, "(Canvas.Left)");
+
+            DoubleAnimation collpse_animate = new DoubleAnimation();
+            collpse_animate.From = null; // expanded_position;
+            collpse_animate.To = labelListCanvas.Children.Count * 20;
+            collpse_animate.Duration = _animate_during;
+            //collpse_animate.Completed += Animate_Completed;
+            _collpse_story_board.Children.Add(collpse_animate);
+            Storyboard.SetTarget(collpse_animate, b);
+            Storyboard.SetTargetProperty(collpse_animate, "(Canvas.Left)");
+        }
+
         /// <summary>
         /// 当ItemsSource改变时，绘制标签，注册动画
         /// </summary>
@@ -66,28 +86,38 @@ namespace FileManager_UWP.Controls {
                 b.SetValue(Canvas.LeftProperty, expanded_position);
                 b.Style = (Style)genericResourceDictionary["LabelButtonStyle"];
                 b.Click += B_Click;
-
-                DoubleAnimation expand_animate = new DoubleAnimation();
-                expand_animate.From = null; // labelListCanvas.Children.Count * 22;
-                expand_animate.To = expanded_position;
-                expand_animate.Duration = _animate_during;
-                expand_animate.Completed += Animate_Completed;
-                _expand_story_board.Children.Add(expand_animate);
-                Storyboard.SetTarget(expand_animate, b);
-                Storyboard.SetTargetProperty(expand_animate, "(Canvas.Left)");
-
-                DoubleAnimation collpse_animate = new DoubleAnimation();
-                collpse_animate.From = null; // expanded_position;
-                collpse_animate.To = labelListCanvas.Children.Count * 20;
-                collpse_animate.Duration = _animate_during;
-                collpse_animate.Completed += Animate_Completed;
-                _collpse_story_board.Children.Add(collpse_animate);
-                Storyboard.SetTarget(collpse_animate, b);
-                Storyboard.SetTargetProperty(collpse_animate, "(Canvas.Left)");
-
+                SetElasticAnimate(b, expanded_position);
                 expanded_position += label.tag.Count() * 14 + 15;
                 labelListCanvas.Children.Add(b);
             }
+            Button add_button = new Button();
+            SetElasticAnimate(add_button, expanded_position);
+            add_button.Content = "+";
+            add_button.SetValue(Canvas.LeftProperty, expanded_position);
+            add_button.Style = (Style)genericResourceDictionary["LabelButtonStyle"];
+            add_button.Click += Add_Click;
+            DoubleAnimation appear_animate = new DoubleAnimation {
+                To = 100,
+                Duration = _animate_during
+            };
+            appear_animate.Completed += Animate_Completed;
+            _expand_story_board.Children.Add(appear_animate);
+            Storyboard.SetTarget(appear_animate, add_button);
+            Storyboard.SetTargetProperty(appear_animate, "Opacity");
+            DoubleAnimation disappear_animate = new DoubleAnimation {
+                Duration = _animate_during
+            };
+            // 如果没有标签，则+不自动隐藏
+            if (itemsSource.Count > 0)
+                disappear_animate.To = 0;
+            else
+                disappear_animate.To = 100;
+            disappear_animate.Completed += Animate_Completed;
+            _collpse_story_board.Children.Add(disappear_animate);
+            Storyboard.SetTarget(disappear_animate, add_button);
+            Storyboard.SetTargetProperty(disappear_animate, "Opacity");
+
+            labelListCanvas.Children.Add(add_button);
             measure();
             LabelListCanvas_PointerExited(null, null);
         }
@@ -97,6 +127,15 @@ namespace FileManager_UWP.Controls {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void B_Click(object sender, RoutedEventArgs e) {
+            Button b = sender as Button;
+            Debug.WriteLine(b.Content);
+        }
+        /// <summary>
+        /// 点击新建标签
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Add_Click(object sender, RoutedEventArgs e) {
             Button b = sender as Button;
             Debug.WriteLine(b.Content);
         }
@@ -124,7 +163,7 @@ namespace FileManager_UWP.Controls {
         /// <param name="e"></param>
         private void LabelListCanvas_PointerExited(object sender, PointerRoutedEventArgs e) {
             _collpse_story_board.Begin();
-            for (int i = 0; i < labelListCanvas.Children.Count - 1; i++) {
+            for (int i = 0; i < labelListCanvas.Children.Count - 2; i++) {
                 Button b = labelListCanvas.Children[i] as Button;
                 b.Content = String.Format("{0}...", (b.Content as string)[0]);
             }
@@ -137,7 +176,7 @@ namespace FileManager_UWP.Controls {
         private void LabelListCanvas_PointerEntered(object sender, PointerRoutedEventArgs e) {
             _expand_story_board.Begin();
             var labels = ItemsSource as ObservableCollection<LabelItem>;
-            for (int i = 0; i < labels.Count; i++) {
+            for (int i = 0; i < labels.Count - 1; i++) {
                 Button b = labelListCanvas.Children[i] as Button;
                 b.Content = labels[i].tag;
             }

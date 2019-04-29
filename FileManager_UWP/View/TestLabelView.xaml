@@ -22,7 +22,9 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>-->
-        
-        <controls:LabelListControl ItemsSource="{x:Bind Labels}"></controls:LabelListControl>
+
+        <controls:LabelListControl ItemsSource="{x:Bind Labels}" Tapped="LabelListControl_Tapped" />
+        <controls:LabelListControl ItemsSource="{x:Bind empty}" />
+
     </StackPanel>
 </Page>

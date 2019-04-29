@@ -32,6 +32,7 @@ namespace FileManager_UWP.View {
                 new LabelItem("才明洋与吴岳江进行土耳其摔跤"),
                 new LabelItem("真正的瑜伽大师")
             };
+        public ObservableCollection<LabelItem> empty = new ObservableCollection<LabelItem>();
 
         public TestLabelView() {
             this.InitializeComponent();
@@ -57,6 +58,10 @@ namespace FileManager_UWP.View {
                     break;
             }
             Debug.WriteLine(Labels.Count.ToString());
+        }
+
+        private void LabelListControl_Tapped(object sender, TappedRoutedEventArgs e) {
+            Debug.WriteLine(sender);
         }
     }
 }
