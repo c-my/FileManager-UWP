@@ -17,16 +17,16 @@ using Windows.UI.Xaml.Media.Animation;
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace FileManager_UWP.Controls {
-
+    /// <summary>
+    /// 一个可以自动折叠的标签菜单
+    /// </summary>
     public class LabelListControl: ItemsControl {
 
         //private int _collpse_distance = 22;
         //private List<int> _expanded_position = new List<int>();
         private Storyboard _collpse_story_board = new Storyboard();
         private Storyboard _expand_story_board = new Storyboard();
-        private Duration _animate_during = new Duration(TimeSpan.FromMilliseconds(500));
-        private int _status = 0; // 0 展开， 1 动画， 2 折叠
-        private double _width, _height;
+        private Duration _animate_during = new Duration(TimeSpan.FromMilliseconds(200));
         private Canvas labelListCanvas;
 
 
@@ -37,20 +37,22 @@ namespace FileManager_UWP.Controls {
             genericResourceDictionary = new ResourceDictionary();
             Application.LoadComponent(genericResourceDictionary, uri);
         }
-
+        /// <summary>
+        /// 监听ItemSource改变
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ItemsSource_CollectionChanged(object sender, 
             System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
             update();
         }
 
+        /// <summary>
+        /// 当ItemsSource改变时，绘制标签，注册动画
+        /// </summary>
         private void update() {
-            //TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
-            //textBlock.Text = "测试自定义控件\n";
-            //listView.ItemsSource = ItemsSource;
             var itemsSource = ItemsSource as ObservableCollection<LabelItem>;
-            //textBlock.Text += itemsSource.Count().ToString();
 
-            //labelListCanvas.Children.Count;
             labelListCanvas.Children.Clear();
             _collpse_story_board.Stop();
             _collpse_story_board.Children.Clear();
@@ -65,55 +67,85 @@ namespace FileManager_UWP.Controls {
                 b.Style = (Style)genericResourceDictionary["LabelButtonStyle"];
                 b.Click += B_Click;
 
-                DoubleAnimation collpse_animate = new DoubleAnimation();
-                collpse_animate.From = null; // labelListCanvas.Children.Count * 22;
-                collpse_animate.To = expanded_position;
-                collpse_animate.Duration = _animate_during;
-                collpse_animate.Completed += Animate_Completed;
-                _collpse_story_board.Children.Add(collpse_animate);
-                Storyboard.SetTarget(collpse_animate, b);
-                Storyboard.SetTargetProperty(collpse_animate, "(Canvas.Left)");
-
                 DoubleAnimation expand_animate = new DoubleAnimation();
-                expand_animate.From = null; // expanded_position;
-                expand_animate.To = labelListCanvas.Children.Count * 22;
+                expand_animate.From = null; // labelListCanvas.Children.Count * 22;
+                expand_animate.To = expanded_position;
                 expand_animate.Duration = _animate_during;
                 expand_animate.Completed += Animate_Completed;
                 _expand_story_board.Children.Add(expand_animate);
                 Storyboard.SetTarget(expand_animate, b);
                 Storyboard.SetTargetProperty(expand_animate, "(Canvas.Left)");
 
-                expanded_position += label.tag.Count() * 14 + 20;
+                DoubleAnimation collpse_animate = new DoubleAnimation();
+                collpse_animate.From = null; // expanded_position;
+                collpse_animate.To = labelListCanvas.Children.Count * 20;
+                collpse_animate.Duration = _animate_during;
+                collpse_animate.Completed += Animate_Completed;
+                _collpse_story_board.Children.Add(collpse_animate);
+                Storyboard.SetTarget(collpse_animate, b);
+                Storyboard.SetTargetProperty(collpse_animate, "(Canvas.Left)");
+
+                expanded_position += label.tag.Count() * 14 + 15;
                 labelListCanvas.Children.Add(b);
             }
             measure();
             LabelListCanvas_PointerExited(null, null);
         }
-
+        /// <summary>
+        /// 点击标签
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void B_Click(object sender, RoutedEventArgs e) {
             Button b = sender as Button;
             Debug.WriteLine(b.Content);
         }
-
+        /// <summary>
+        /// 动画完成
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Animate_Completed(object sender, object e) {
             measure();
         }
-
+        /// <summary>
+        /// 计算控件尺寸
+        /// </summary>
         private void measure() {
             Button lb = labelListCanvas.Children.Last() as Button;
             labelListCanvas.Height = lb.ActualHeight;
             double left = (double)lb.GetValue(Canvas.LeftProperty);
-            labelListCanvas.Width = left + lb.ActualHeight;
+            labelListCanvas.Width = left + lb.ActualWidth;
         }
-
+        /// <summary>
+        /// 鼠标离开
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LabelListCanvas_PointerExited(object sender, PointerRoutedEventArgs e) {
-            _expand_story_board.Begin();
-        }
-
-        private void LabelListCanvas_PointerEntered(object sender, PointerRoutedEventArgs e) {
             _collpse_story_board.Begin();
+            for (int i = 0; i < labelListCanvas.Children.Count - 1; i++) {
+                Button b = labelListCanvas.Children[i] as Button;
+                b.Content = String.Format("{0}...", (b.Content as string)[0]);
+            }
+        }
+        /// <summary>
+        /// 鼠标进入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LabelListCanvas_PointerEntered(object sender, PointerRoutedEventArgs e) {
+            _expand_story_board.Begin();
+            var labels = ItemsSource as ObservableCollection<LabelItem>;
+            for (int i = 0; i < labels.Count; i++) {
+                Button b = labelListCanvas.Children[i] as Button;
+                b.Content = labels[i].tag;
+            }
         }
 
+        /// <summary>
+        /// 初始化控件
+        /// </summary>
         private void init() {
             var itemsSource = ItemsSource as ObservableCollection<LabelItem>;
             itemsSource.CollectionChanged += ItemsSource_CollectionChanged;
@@ -126,6 +158,9 @@ namespace FileManager_UWP.Controls {
             //textBlock.Text = "测试自定义控件\nINIT";
         }
 
+        /// <summary>
+        /// 该Control被加载时调用
+        /// </summary>
         protected override void OnApplyTemplate() {
             init();
             update();
