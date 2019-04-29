@@ -31,10 +31,12 @@
                             <ResourceDictionary>
                                 <SolidColorBrush x:Key="ButtonBackground" Color="Transparent"/>
                                 <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Transparent"/>
+                                <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="Transparent"/>
                                 <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                             </ResourceDictionary>
                         </Button.Resources>
-                        <Canvas Name="LabelListCanvas"></Canvas>
+                        <Canvas Name="LabelListCanvas" AllowDrop="True"></Canvas>
                     </Button>
                 </ControlTemplate>
             </Setter.Value>

@@ -38,6 +38,7 @@ namespace FileManager_UWP.Controls {
             var uri = new Uri("ms-appx:///Controls/LabelListControl.xaml");
             genericResourceDictionary = new ResourceDictionary();
             Application.LoadComponent(genericResourceDictionary, uri);
+            AllowDrop = true;
         }
         /// <summary>
         /// 监听ItemSource改变
@@ -89,6 +90,8 @@ namespace FileManager_UWP.Controls {
                 b.SetValue(Canvas.LeftProperty, expanded_position);
                 b.Style = (Style)genericResourceDictionary["LabelButtonStyle"];
                 b.Click += B_Click;
+                b.DragLeave += B_DragLeave;
+                b.CanDrag = true;
                 SetElasticAnimate(b, expanded_position);
                 expanded_position += label.tag.Count() * 14 + 15;
                 labelListCanvas.Children.Add(b);
@@ -124,6 +127,16 @@ namespace FileManager_UWP.Controls {
             measure();
             LabelListCanvas_PointerExited(null, null);
         }
+
+        private void B_DragLeave(object sender, DragEventArgs e) {
+            var itemsSource = ItemsSource as ObservableCollection<LabelItem>;
+            Button b = sender as Button;
+            var tag = b.Content as string;
+            Debug.WriteLine("Drag Leave " + tag);
+            int index = itemsSource.ToList().FindIndex(x => x.tag == tag);
+            itemsSource.RemoveAt(index);
+        }
+
         /// <summary>
         /// 点击标签
         /// </summary>
