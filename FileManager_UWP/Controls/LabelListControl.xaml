@@ -7,9 +7,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="RootGrid" 
+                    <Grid x:Name="RootGrid"
                           CornerRadius="10" 
-                          Background="#40FF00" 
+                          Background="{TemplateBinding Background}" 
                           BorderThickness="1"
                           BorderBrush="Blue">
                         <ContentPresenter 
