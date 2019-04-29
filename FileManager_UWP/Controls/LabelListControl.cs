@@ -17,8 +17,12 @@ using Windows.UI.Xaml.Media;
 namespace FileManager_UWP.Controls {
 
     public class LabelListControl: ItemsControl {
+        private ResourceDictionary genericResourceDictionary;
         public LabelListControl() {
             this.DefaultStyleKey = typeof(LabelListControl);
+            var uri = new Uri("ms-appx:///Controls/LabelListControl.xaml");
+            genericResourceDictionary = new ResourceDictionary();
+            Application.LoadComponent(genericResourceDictionary, uri);
         }
 
         private void ItemsSource_CollectionChanged(object sender, 
@@ -36,6 +40,8 @@ namespace FileManager_UWP.Controls {
                 Button b = new Button();
                 b.Content = label;
                 b.SetValue(Canvas.LeftProperty, labelListCanvas.Children.Count * 10);
+                //b.Style = (Style)Application.Current.Resources["LabelButtonStyle"];
+                b.Style = (Style)genericResourceDictionary["LabelButtonStyle"];
                 labelListCanvas.Children.Add(b);
             }
         }
