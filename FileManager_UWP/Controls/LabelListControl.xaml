@@ -9,15 +9,9 @@
                 <ControlTemplate TargetType="local:LabelListControl">
                     <StackPanel>
                         <TextBlock Name="LabelTextBlock"></TextBlock>
-                        <!--<ListView Name="LabelListView">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <TextBlock Text="{Binding}"></TextBlock>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>-->
+                        <Canvas Name="LabelListCanvas">
+                            
+                        </Canvas>
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>

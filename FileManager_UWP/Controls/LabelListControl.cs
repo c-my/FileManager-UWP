@@ -19,50 +19,40 @@ namespace FileManager_UWP.Controls {
     public class LabelListControl: ItemsControl {
         public LabelListControl() {
             this.DefaultStyleKey = typeof(LabelListControl);
-            //var itemSource = new ObservableCollection<string>();
-            //itemSource.CollectionChanged += ItemsSource_CollectionChanged;
-            //ItemsSource = itemSource;
-            //Debug.WriteLine(itemSource.ToString());
         }
 
-        private void ItemsSource_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
-            Debug.WriteLine("Add ELEMENT");
-            OnApplyTemplate();
-        }
+        private void ItemsSource_CollectionChanged(object sender, 
+            System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+            TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
+            textBlock.Text = "测试自定义控件\n";
+            //listView.ItemsSource = ItemsSource;
+            var itemsSource = ItemsSource as ObservableCollection<string>;
+            textBlock.Text += itemsSource.Count().ToString();
 
-        public new ObservableCollection<string> ItemsSource {
-            get { return (ObservableCollection<string>)GetValue(ItemsControl.ItemsSourceProperty); }
-            set { SetValue(ItemsControl.ItemsSourceProperty, value); }
-        }
-
-        public new static readonly DependencyProperty ItemsSourceProperty =
-             DependencyProperty.Register(
-                 "ItemsSource", typeof(ObservableCollection<string>), typeof(LabelListControl),
-                 new PropertyMetadata(null, OnItemsChanged));
-
-        private static void OnItemsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args) {
-            Debug.WriteLine("Add Element.");
-            LabelListControl target = obj as LabelListControl;
-            ObservableCollection<string> oldValue = (ObservableCollection<string>)args.OldValue;
-            ObservableCollection<string> newValue = (ObservableCollection<string>)args.NewValue;
-            if (oldValue != newValue) {
-                target.ItemsSource = newValue;
-                target.OnApplyTemplate();
+            Canvas labelListCanvas = (Canvas)GetTemplateChild("LabelListCanvas");
+            //labelListCanvas.Children.Count;
+            labelListCanvas.Children.Clear();
+            foreach (string label in itemsSource) {
+                Button b = new Button();
+                b.Content = label;
+                b.SetValue(Canvas.LeftProperty, labelListCanvas.Children.Count * 10);
+                labelListCanvas.Children.Add(b);
             }
+        }
+
+        private void update() {
+            
+        }
+
+        private void init() {
+            var itemsSource = ItemsSource as ObservableCollection<string>;
+            itemsSource.CollectionChanged += ItemsSource_CollectionChanged;
+            TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
+            textBlock.Text = "测试自定义控件\nINIT";
         }
 
         protected override void OnApplyTemplate() {
-            TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
-            textBlock.Text = "测试自定义控件\n";
-            ListView listView = (ListView)GetTemplateChild("LabelListView");
-            //listView.ItemsSource = ItemsSource;
-            ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
-            Debug.WriteLine(ItemsSource.ToString());
-            if (ItemsSource != null) {
-                textBlock.Text += (ItemsSource as ICollection<string>).Count().ToString();
-            } else {
-                textBlock.Text += "0";
-            }
+            init();
         }
     }
 }
