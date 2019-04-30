@@ -46,7 +46,7 @@ namespace FileManager_UWP.Controls {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ItemsSource_CollectionChanged(object sender, 
+        private void ItemsSource_CollectionChanged(object sender,
             System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
             update();
         }
@@ -71,6 +71,9 @@ namespace FileManager_UWP.Controls {
             Storyboard.SetTargetProperty(collpse_animate, "(Canvas.Left)");
         }
 
+        private DependencyProperty LabelProperty = DependencyProperty.Register(
+            "LabelItem", typeof(LabelItem), typeof(Button), null);
+
         /// <summary>
         /// 当ItemsSource改变时，绘制标签，注册动画
         /// </summary>
@@ -86,13 +89,14 @@ namespace FileManager_UWP.Controls {
             int expanded_position = 0;
             foreach (LabelItem label in itemsSource) {
                 Button b = new Button();
+                b.SetValue(LabelProperty, label);
                 b.Content = label.tag;
                 b.Background = new SolidColorBrush(label.color);
                 b.SetValue(Canvas.LeftProperty, expanded_position);
                 b.Style = (Style)genericResourceDictionary["LabelButtonStyle"];
-                // b.Click += B_Click;
-                b.PointerPressed += B_PointerPressed;
-                b.PointerReleased += B_PointerReleased;
+                b.Click += B_Click;
+                //b.AddHandler(PointerPressedEvent, new PointerEventHandler(B_PointerPressed), true);
+                //b.AddHandler(PointerReleasedEvent, new PointerEventHandler(B_PointerReleased), true);
                 InitManipulationTransforms(b);
                 SetElasticAnimate(b, expanded_position);
                 expanded_position += label.tag.Count() * 14 + 15;
@@ -130,44 +134,33 @@ namespace FileManager_UWP.Controls {
             LabelListCanvas_PointerExited(null, null);
         }
 
-        private bool _pressing_label = false;
-        private void B_PointerPressed(object sender, PointerRoutedEventArgs e) {
-            Debug.WriteLine("label pressed");
-            _pressing_label = true;
-        }
+        //private bool _pressing_label = false;
+        //private void B_PointerPressed(object sender, PointerRoutedEventArgs e) {
+        //    Debug.WriteLine("label pressed");
+        //    _pressing_label = true;
+        //}
 
-        private void B_PointerReleased(object sender, PointerRoutedEventArgs e) {
-            Debug.WriteLine("label release");
-            _pressing_label = false;
-        }
+        //private void B_PointerReleased(object sender, PointerRoutedEventArgs e) {
+        //    Debug.WriteLine("label release");
+        //    _pressing_label = false;
+        //}
 
         private void B_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e) {
             TransformGroup transforms = (sender as Button).RenderTransform as TransformGroup;
             MatrixTransform previousTransform = transforms.Children[0] as MatrixTransform;
             CompositeTransform deltaTransform = transforms.Children[1] as CompositeTransform;
-            if (_pressing_label) {
-                previousTransform.Matrix = transforms.Value;
+            previousTransform.Matrix = transforms.Value;
 
-                // Get center point for rotation
-                Point center = previousTransform.TransformPoint(new Point(e.Position.X, e.Position.Y));
-                deltaTransform.CenterX = center.X;
-                deltaTransform.CenterY = center.Y;
+            // Get center point for rotation
+            Point center = previousTransform.TransformPoint(new Point(e.Position.X, e.Position.Y));
+            deltaTransform.CenterX = center.X;
+            deltaTransform.CenterY = center.Y;
 
-                // Look at the Delta property of the ManipulationDeltaRoutedEventArgs to retrieve
-                // the rotation, scale, X, and Y changes
-                deltaTransform.Rotation = e.Delta.Rotation;
-                deltaTransform.TranslateX = e.Delta.Translation.X;
-                deltaTransform.TranslateY = e.Delta.Translation.Y;
-            } else {
-                previousTransform.Matrix = transforms.Value;
-
-                Point center = previousTransform.TransformPoint(new Point(e.Position.X, e.Position.Y));
-                deltaTransform.CenterX = _origin.X; // center.X;
-                deltaTransform.CenterY = _origin.Y; // center.Y;
-
-                deltaTransform.TranslateX = 0;
-                deltaTransform.TranslateY = 0;
-            }
+            // Look at the Delta property of the ManipulationDeltaRoutedEventArgs to retrieve
+            // the rotation, scale, X, and Y changes
+            deltaTransform.Rotation = e.Delta.Rotation;
+            deltaTransform.TranslateX = e.Delta.Translation.X;
+            deltaTransform.TranslateY = e.Delta.Translation.Y;
         }
 
         private void InitManipulationTransforms(Button b) {
@@ -189,6 +182,9 @@ namespace FileManager_UWP.Controls {
         private void B_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e) {
             Debug.WriteLine("Manipulation finish");
             _draging = false;
+            ObservableCollection<LabelItem> itemsSource = ItemsSource as ObservableCollection<LabelItem>;
+            itemsSource.Remove((sender as Button).GetValue(LabelProperty) as LabelItem);
+            update();
         }
 
         private void B_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e) {
@@ -273,11 +269,11 @@ namespace FileManager_UWP.Controls {
         private void LabelListCanvas_PointerExited(object sender, PointerRoutedEventArgs e) {
             _hovering = false;
             // 正在输入新标签时不折叠
-            if (!_adding_new_label || !_draging) {
+            if (!_adding_new_label && !_draging) {
                 _collpse_story_board.Begin();
                 for (int i = 0; i < labelListCanvas.Children.Count - 2; i++) {
                     Button b = labelListCanvas.Children[i] as Button;
-                    b.Content = String.Format("{0}...", (b.Content as string)[0]);
+                    b.Content = string.Format("{0}...", (b.Content as string)[0]);
                 }
             }
         }
@@ -288,7 +284,7 @@ namespace FileManager_UWP.Controls {
         /// <param name="e"></param>
         private void LabelListCanvas_PointerEntered(object sender, PointerRoutedEventArgs e) {
             _hovering = true;
-            if (!_adding_new_label || !_draging) {
+            if (!_adding_new_label && !_draging) {
                 _expand_story_board.Begin();
                 var labels = ItemsSource as ObservableCollection<LabelItem>;
                 for (int i = 0; i < labels.Count - 1; i++) {

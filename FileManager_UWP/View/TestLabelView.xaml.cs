@@ -32,7 +32,10 @@ namespace FileManager_UWP.View {
                 new LabelItem("才明洋与吴岳江进行土耳其摔跤"),
                 new LabelItem("真正的瑜伽大师")
             };
-        public ObservableCollection<LabelItem> empty = new ObservableCollection<LabelItem>();
+        public ObservableCollection<LabelItem> empty = 
+            new ObservableCollection<LabelItem>() {
+                new LabelItem("123")
+            };
 
         public TestLabelView() {
             this.InitializeComponent();
