@@ -25,14 +25,6 @@ namespace FileManager_UWP.ViewModel
             Path = "C:\\Users\\CaiMY\\Downloads\\Square.png";
         }
 
-        public async Task DoAsync()
-        {
-            StorageFile file = await StorageFile.GetFileFromPathAsync("C:\\Users\\CaiMY\\Downloads\\Square.png");
-            
-            _source.SetSource(file.OpenAsync(FileAccessMode.Read).AsTask().Result);
-        }
-
-
         private BitmapImage _source;
         public BitmapImage ImgSource
         {

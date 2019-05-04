@@ -34,11 +34,6 @@ namespace FileManager_UWP.View
             vm = new PreviewViewModel();
             DataContext = vm;
         }
-
-        private async void Button_ClickAsync(object sender, RoutedEventArgs e)
-        {
-            await vm.DoAsync();
-        }
     }
 }
 

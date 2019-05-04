@@ -24,6 +24,9 @@
                 <NavigationViewItem Icon="Tag"></NavigationViewItem>
             </StackPanel>
         </NavigationView.PaneFooter>
-        <Frame Name="mainFrame"/>
+        <StackPanel Orientation="Horizontal">
+            <Frame Name="mainFrame"/>
+            <Frame Name="previewFrame"/>
+        </StackPanel>
     </NavigationView>
 </Page>

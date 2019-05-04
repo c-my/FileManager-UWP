@@ -27,6 +27,7 @@ namespace FileManager_UWP
         {
             this.InitializeComponent();
             mainFrame.Navigate(typeof(FileListView));
+            previewFrame.Navigate(typeof(PreviewView));
         }
     }
 }
