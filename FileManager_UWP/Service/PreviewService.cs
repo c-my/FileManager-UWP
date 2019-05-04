@@ -14,25 +14,28 @@ namespace FileManager_UWP.Service
     class PreviewService
     {
 
-        private static string defaultPicPath = "ms-appx:///Assets\\StoreLogo.png";
-        public static PreviewModel.FileType GetFileType(string path)
-        {
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            BinaryReader reader = new BinaryReader(fs);
-            string bx = "";
-            byte buffer;
-            try
-            {
-                buffer = reader.ReadByte();
-                bx = buffer.ToString();
-                buffer = reader.ReadByte();
-                bx += buffer.ToString();
-            }
-            catch (System.IO.IOException)
-            {
+        private static string defaultPicPath = "ms-appx:///Assets/StoreLogo.png";
 
+
+        /// <summary>
+        /// 判断文件的类型（图片/PDF文档）
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <returns>文件类型</returns>
+        public static async Task<PreviewModel.FileType> GetFileTypeAsync(string path)
+        {
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+            Windows.Storage.Streams.Buffer buf = new Windows.Storage.Streams.Buffer(2);
+            var buffer = await Windows.Storage.FileIO.ReadBufferAsync(file);
+            string res = "";
+            using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buffer))
+            {
+                var byt = dataReader.ReadByte();
+                res = byt.ToString();
+                byt = dataReader.ReadByte();
+                res += byt.ToString();
             }
-            switch (bx)
+            switch (res)
             {
                 case PreviewModel.PNGType:
                 case PreviewModel.GIFType:
@@ -44,8 +47,13 @@ namespace FileManager_UWP.Service
                 default:
                     return PreviewModel.FileType.NAT;
             }
-        } 
+        }
 
+        /// <summary>
+        /// 获得图片文件的预览图
+        /// </summary>
+        /// <param name="path">图片路径</param>
+        /// <returns>图片的预览</returns>
         public static async Task<IRandomAccessStream> GetPicPreviewAsync(string path)
         {
             try
@@ -61,6 +69,11 @@ namespace FileManager_UWP.Service
             }
         }
 
+        /// <summary>
+        /// 获得PDF文件的预览图
+        /// </summary>
+        /// <param name="path">文档路径</param>
+        /// <returns>PDF的预览</returns>
         public static async Task<IRandomAccessStream> GetPDFPreviewAsync(string path)
         {
             StorageFile pdfFile;
@@ -81,7 +94,16 @@ namespace FileManager_UWP.Service
 
         public static async Task<IRandomAccessStream> ShowPreviewAsync(string path)
         {
-            return await GetPDFPreviewAsync(path);
+            var t = await GetFileTypeAsync(path);
+            switch (t)
+            {
+                case PreviewModel.FileType.Picture:
+                    return await GetPicPreviewAsync(path);
+                case PreviewModel.FileType.Pdf:
+                    return await GetPDFPreviewAsync(path);
+                default:
+                    return await GetPicPreviewAsync(defaultPicPath);
+            }
         }
     }
 }
