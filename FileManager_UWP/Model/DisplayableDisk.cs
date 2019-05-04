@@ -14,7 +14,7 @@ namespace FileManager_UWP.Model
     public class DisplayableDisk: Displayable {
         private readonly DriveInfo _drive;
         private readonly BitmapImage _icon = new BitmapImage();
-        private readonly List<String> _labels = new List<String>();
+        private readonly List<LabelItem> _labels = new List<LabelItem>();
 
         private DisplayableDisk(DriveInfo d) {
             _drive = d;
@@ -33,6 +33,6 @@ namespace FileManager_UWP.Model
         public override string Path => _drive.Name;
         public override BitmapImage Icon => _icon;
         public override Type Type => Type.Disk;
-        public override List<String> Labels => _labels;
+        public override List<LabelItem> Labels => _labels;
     }
 }

@@ -14,12 +14,12 @@ namespace FileManager_UWP.Model
             Path = path;
             Type = type;
             Icon = icon;
-            Labels = new List<String>();
+            Labels = new List<LabelItem>();
         }
         public override string Name { get; }
         public override string Path { get; }
         public override Type Type { get; }
         public override BitmapImage Icon { get; }
-        public override List<String> Labels { get; }
+        public override List<LabelItem> Labels { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FileManager_UWP.Model;
+﻿using FileManager_UWP.Controls;
+using FileManager_UWP.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,6 +41,10 @@ namespace FileManager_UWP.View {
         public TestLabelView() {
             this.InitializeComponent();
             Debug.WriteLine(Labels.ToString());
+            // MicroshitPanel;
+            LabelListControl list1 = new LabelListControl();
+            list1.ItemsSource = Labels;
+            MicroshitPanel.Children.Add(list1);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) {

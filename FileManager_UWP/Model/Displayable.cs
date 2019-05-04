@@ -11,7 +11,7 @@ namespace FileManager_UWP.Model {
         public abstract string Path { get; }
         public abstract Type Type { get; }
         public abstract BitmapImage Icon { get; }
-        public abstract List<String> Labels { get; }
+        public abstract List<LabelItem> Labels { get; }
 
         public int CompareTo(object obj) {
 

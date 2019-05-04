@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     >
 
-    <StackPanel>
+    <StackPanel Name="MicroshitPanel">
         <TextBlock
             FontSize="50"
             Text="Test Label View" />
@@ -23,8 +23,8 @@
             </ListView.ItemTemplate>
         </ListView>-->
 
-        <controls:LabelListControl ItemsSource="{x:Bind Labels}" Tapped="LabelListControl_Tapped" />
-        <controls:LabelListControl ItemsSource="{x:Bind empty}" />
+        <!--<controls:LabelListControl ItemsSource="{x:Bind Labels}" />-->
+        <!--<controls:LabelListControl ItemsSource="{Binding empty}" />-->
 
     </StackPanel>
 </Page>
