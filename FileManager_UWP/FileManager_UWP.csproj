@@ -126,13 +126,16 @@
     <Compile Include="Model\DisplayableFolder.cs" />
     <Compile Include="Model\DisplayableSpecial.cs" />
     <Compile Include="Model\Displayable.cs" />
+    <Compile Include="Model\PreviewModel.cs" />
     <Compile Include="Model\FolderSetting.cs" />
     <Compile Include="Model\LabelItem.cs" />
     <Compile Include="Model\VirtualFolder.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\IconServer.cs" />
+    <Compile Include="Service\PreviewService.cs" />
     <Compile Include="ViewModel\FileListViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="ViewModel\PreviewViewModel.cs" />
     <Compile Include="View\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
     </Compile>

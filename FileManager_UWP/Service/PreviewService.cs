@@ -5,12 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace FileManager_UWP.Service
 {
     class PreviewService
     {
-        public static PreviewModel.FileType getFileType(string path)
+        public static PreviewModel.FileType GetFileType(string path)
         {
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             BinaryReader reader = new BinaryReader(fs);
@@ -40,5 +42,22 @@ namespace FileManager_UWP.Service
                     return PreviewModel.FileType.NAT;
             }
         } 
+
+        public static async Task<IRandomAccessStream> GetPicPreviewAsync(string path)
+        {
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+            return await file.OpenAsync(FileAccessMode.Read);
+        }
+
+        //public static async Task<IRandomAccessStream> GetPDFPreviewAsyc(string path)
+        //{
+            
+        //    return new IRandomAccessStream();
+        //}
+
+        public static async Task<IRandomAccessStream> ShowPreviewAsync(string path)
+        {
+            return await GetPicPreviewAsync(path);
+        }
     }
 }
