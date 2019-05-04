@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
@@ -11,6 +12,16 @@ using Type = FileManager_UWP.Model.Type;
 
 namespace FileManager_UWP.ViewModel {
     public class FileListViewModel: ViewModelBase {
+        public ObservableCollection<LabelItem> Labels =
+            new ObservableCollection<LabelItem>{
+                new LabelItem("照片"),
+                new LabelItem("土耳其摔跤"),
+                new LabelItem("李若明"),
+                new LabelItem("鸢晓曼"),
+                new LabelItem("才明洋与吴岳江进行土耳其摔跤"),
+                new LabelItem("真正的瑜伽大师")
+            };
+
         /// <summary>
         /// 当前路径
         /// </summary>
@@ -45,6 +56,7 @@ namespace FileManager_UWP.ViewModel {
 
         public RelayCommand RefreshCommand =>
             _refreshCommand ?? (_refreshCommand = new RelayCommand(async () => {
+                Debug.WriteLine("Refresh");
                 try {
                     var fileService = new FileService();
                     var fileList = await fileService.GetDisplayFileFolderList(Path);
@@ -83,7 +95,9 @@ namespace FileManager_UWP.ViewModel {
         public RelayCommand DoubleTappedCommand =>
             _doubleTappedCommand ?? (_doubleTappedCommand = new RelayCommand(
                 () => {
-                    Displayable i = ListSelectedItem as Displayable;
+                    StackPanel sp = ListSelectedItem as StackPanel;
+                    Displayable i = sp.GetValue(StackPanel.TagProperty) as Displayable;
+                    //Displayable i = ListSelectedItem as Displayable;
                     Debug.WriteLine("Double tapped");
                     if (i != null && (i.Type != Type.File)) {
                         Path = i.Path;

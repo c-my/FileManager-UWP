@@ -31,7 +31,7 @@ namespace FileManager_UWP.Controls {
         private Canvas labelListCanvas;
         private bool _adding_new_label = false;
         private bool _hovering = false, _draging = false;
-
+        private int shit_cnt = 0;
 
         private ResourceDictionary genericResourceDictionary;
         public LabelListControl() {
@@ -39,8 +39,30 @@ namespace FileManager_UWP.Controls {
             var uri = new Uri("ms-appx:///Controls/LabelListControl.xaml");
             genericResourceDictionary = new ResourceDictionary();
             Application.LoadComponent(genericResourceDictionary, uri);
-            AllowDrop = true;
+            Loaded += LabelListControl_Loaded;
+            //AllowDrop = true;
+            //RegisterPropertyChangedCallback(ItemsControl.ItemsSourceProperty, this.tbTagChangedCallback);
         }
+
+        private void LabelListControl_Loaded(object sender, RoutedEventArgs e) {
+            init();
+            update();
+        }
+
+        private void tbTagChangedCallback(DependencyObject sender, DependencyProperty dp) {
+            if (dp == ItemsControl.ItemsSourceProperty) {
+                // These lines produce the same result.
+                Debug.WriteLine("The tag has been set to " + sender.ToString());
+                Debug.WriteLine("The tag has been set to " + sender.GetValue(dp));
+                ItemsSource = sender.GetValue(dp);
+                shit_cnt++;
+                if (shit_cnt >= 2) {
+                    init();
+                    update();
+                }
+            }
+        }
+
         /// <summary>
         /// 监听ItemSource改变
         /// </summary>
@@ -298,23 +320,64 @@ namespace FileManager_UWP.Controls {
         /// 初始化控件
         /// </summary>
         private void init() {
+            Debug.WriteLine("INIT LABEL LIST CONTROL");
             var itemsSource = ItemsSource as ObservableCollection<LabelItem>;
+            if (ItemsSource != null && itemsSource == null) {
+                ItemsSource = new ObservableCollection<LabelItem>(ItemsSource as IEnumerable<LabelItem>);
+                itemsSource = ItemsSource as ObservableCollection<LabelItem>;
+            }
+            //var itemsSource = GetValue(ItemsControl.ItemsSourceProperty) as ObservableCollection<LabelItem>;
             itemsSource.CollectionChanged += ItemsSource_CollectionChanged;
             Button labelListButton = (Button)GetTemplateChild("LabelListPresenter");
             labelListButton.PointerEntered += LabelListCanvas_PointerEntered;
             labelListButton.PointerExited += LabelListCanvas_PointerExited;
             labelListCanvas = (Canvas)GetTemplateChild("LabelListCanvas");
-
-            //TextBlock textBlock = (TextBlock)GetTemplateChild("LabelTextBlock");
-            //textBlock.Text = "测试自定义控件\nINIT";
         }
 
         /// <summary>
         /// 该Control被加载时调用
         /// </summary>
         protected override void OnApplyTemplate() {
-            init();
-            update();
+            //shit_cnt++;
+            //if (shit_cnt >= 2) {
+
+            //}
         }
+
+        //public new static readonly DependencyProperty ItemsSourceProperty = //Notice this is static. It's bound to an internal static hash table of some sort; I use to know exactly but forgot.
+        //DependencyProperty.Register(
+        //    "ItemsSources", 
+        //    /*The name of the property to register against. 
+        //     * The static version is always the name of the property ended with Property
+        //     * i.e. SomeValue property is SomeValueProperty dependency property */
+        //    typeof(ObservableCollection<LabelItem>), //This is the type used to describe the property.
+        //    typeof(LabelListControl), //This is the type the dependency property relates to. 
+
+        //    /* Below this is the magic. It's where we supply the property meta data and can be delivered different ways.
+        //    * For this example I will supply only the default value and the event we want to use when the value is changed.
+        //    * Note: 
+        //    * The event we supply is fired ONLY if the value is changed. This event is what we need to use to handle changes in the setter to cover binding operations as well. */
+        //    new PropertyMetadata(default(ObservableCollection<LabelItem>),  
+        //        /* This is the default value the dependency property will have. 
+        //         * It can be whatever you decide but make sure it works with the same type or you'll most likely get an error. */
+        //        /* This is the event fired when the value changes.
+        //         * Note: Dependency properties binding and events always operate on the UI thread. Cross threading will throw exceptions. */
+        //        new PropertyChangedCallback((s, e) => {
+        //            var ctr = s as LabelListControl; //The sender of the callback will always be of the type it's from.
+
+        //            /* The values given from the e argument for OldValue and NewValue should be of type int in this example...
+        //             * but since we can't gaurantee the property is setup properly before here I always add a check. */
+        //             if (e.OldValue != e.NewValue) {
+        //                ctr.ItemsSource = e.NewValue;
+        //            }
+        //            //if (e.OldValue is int oldValue) { }
+        //            //if (e.NewValue is int newValue) {
+        //            //    /* Now do what you want with the information.  This is where you need to do custom work instead of using the setter.
+        //            //     * Note: If you need to work on something in the MainPage remember this is a static event and you'll need to refer to the sender or s value in this case.
+        //            //     * I've converted s to the variable mainPage for easy referencing here. */
+        //            //     ctr.ItemsSource = newValue;  //Note: The custom control should bind to this as well via XAML making this pointless. I set the value here just for educational purposes.
+        //            //}
+        //        })));
+
     }
 }

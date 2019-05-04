@@ -12,12 +12,12 @@ namespace FileManager_UWP.Model
     public class DisplayableFile: Displayable {
         private readonly StorageFile _file;
         private readonly BitmapImage _icon;
-        private readonly List<String> _labels;
+        private readonly List<LabelItem> _labels;
 
         private DisplayableFile(StorageFile f) {
             _file = f;
             _icon = new BitmapImage();
-            _labels = new List<string> { "喵喵喵" };
+            _labels = new List<LabelItem> { new LabelItem("喵喵喵") };
         }
 
         public static async Task<DisplayableFile> GetInstanceAsync(StorageFile f) {
@@ -31,6 +31,6 @@ namespace FileManager_UWP.Model
         public override string Path => _file.Path;
         public override Type Type => Type.File;
         public override BitmapImage Icon => _icon;
-        public override List<String> Labels => _labels;
+        public override List<LabelItem> Labels => _labels;
     }
 }

@@ -6,6 +6,7 @@
     xmlns:Custom="using:Microsoft.Xaml.Interactivity" 
     xmlns:Custom1="using:Microsoft.Xaml.Interactions.Core"
     xmlns:model="using:FileManager_UWP.Model"
+    xmlns:controls="using:FileManager_UWP.Controls"
     x:Class="FileManager_UWP.View.FileListView"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -21,6 +22,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!--<controls:LabelListControl ItemsSource="{x:Bind vm.Labels}" />-->
+
+
         <Button 
             Grid.Row="0"
             Grid.Column="1"
@@ -34,21 +38,21 @@
             Text="{Binding Path}"
             />
         <ListView
+            Name="MicroShitList"
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            ItemsSource="{Binding DisplayFileFolderItems}"
             CanDragItems="False" 
             CanReorderItems="True" 
             AllowDrop="False"
             SelectionMode="Single"
             SelectedItem="{Binding ListSelectedItem, Mode=TwoWay}"
-            
             IsDoubleTapEnabled="True"
             IsTapEnabled="True"
-
             >
-            <ListView.ItemTemplate>
+            <!--ItemsSource="{Binding DisplayFileFolderItems}"-->
+
+            <!--<ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel 
                         Orientation="Horizontal" 
@@ -65,23 +69,18 @@
                             Style="{ThemeResource BaseTextBlockStyle}" 
                             Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" 
                             Margin="12,0,0,0"/>
-                        <ListView 
-                            ScrollViewer.VerticalScrollBarVisibility="Disabled" 
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.HorizontalScrollMode="Enabled"                  
-                            ScrollViewer.VerticalScrollMode="Disabled"
-                            ItemsSource="{Binding Labels}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <TextBlock Text="{Binding}"></TextBlock>
-                                    </Grid>
+                        --><!--<controls:LabelListControl ItemsSource="{x:Bind Labels}">
+                            <DataTemplate x:DataType="model:LabelItem"></DataTemplate>
+                            --><!--<controls:LabelListControl.ItemTemplate>
+                                <DataTemplate x:DataType="model:LabelItem">
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </controls:LabelListControl.ItemTemplate>--><!--
+                        </controls:LabelListControl>--><!--
+
                     </StackPanel>
+
                 </DataTemplate>
-            </ListView.ItemTemplate>
+            </ListView.ItemTemplate>-->
 
             <Custom:Interaction.Behaviors>
                 <Custom1:EventTriggerBehavior EventName="DoubleTapped">
