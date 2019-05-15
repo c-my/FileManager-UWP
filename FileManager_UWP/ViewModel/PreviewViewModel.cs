@@ -22,7 +22,7 @@ namespace FileManager_UWP.ViewModel
         public PreviewViewModel()
         {
             _source = new BitmapImage();
-            Path = "C:\\Users\\CaiMY\\Downloads\\tt.pdf";
+            Path = "C:\\Users\\CaiMY\\Downloads\\tt.doc";
         }
 
         private BitmapImage _source;

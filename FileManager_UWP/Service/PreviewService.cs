@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using Windows.Data.Pdf;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Syncfusion.DocIO.DLS;
+using Syncfusion.DocIORenderer;
+using Syncfusion.Pdf;
 
 namespace FileManager_UWP.Service
 {
@@ -25,7 +28,6 @@ namespace FileManager_UWP.Service
         public static async Task<PreviewModel.FileType> GetFileTypeAsync(string path)
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-            Windows.Storage.Streams.Buffer buf = new Windows.Storage.Streams.Buffer(2);
             var buffer = await Windows.Storage.FileIO.ReadBufferAsync(file);
             string res = "";
             using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buffer))
@@ -44,9 +46,27 @@ namespace FileManager_UWP.Service
                     return PreviewModel.FileType.Picture;
                 case PreviewModel.PDFType:
                     return PreviewModel.FileType.Pdf;
+                case PreviewModel.OfficeXType:
+                case PreviewModel.OfficeOldType:
+                    return PreviewModel.FileType.Office;
                 default:
                     return PreviewModel.FileType.NAT;
             }
+        }
+
+        public static async Task<IRandomAccessStream> GetWordPreviewAsync(string path)
+        {
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+            var res = await file.OpenAsync(FileAccessMode.Read);
+            WordDocument wordDocument = new WordDocument();
+            wordDocument.Open(res.AsStream(), Syncfusion.DocIO.FormatType.Automatic);
+            DocIORenderer render = new DocIORenderer();
+            Syncfusion.Pdf.PdfDocument pdfDocument = render.ConvertToPDF(wordDocument);
+            render.Dispose();
+            wordDocument.Dispose();
+            InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
+            pdfDocument.Save(ms.AsStream());
+            return await GetPDFPreviewFromStreamAsync(ms);
         }
 
         /// <summary>
@@ -62,7 +82,7 @@ namespace FileManager_UWP.Service
                 var res = await file.OpenAsync(FileAccessMode.Read);
                 return res;
             }
-            catch (System.Exception exception)
+            catch (System.Exception)
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(defaultPicPath);
                 return await file.OpenAsync(FileAccessMode.Read);
@@ -80,13 +100,13 @@ namespace FileManager_UWP.Service
             try
             {
                 pdfFile = await StorageFile.GetFileFromPathAsync(path);
-                var pdf = await PdfDocument.LoadFromFileAsync(pdfFile);
+                var pdf = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(pdfFile);
                 var page = pdf.GetPage(0);
                 InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
                 await page.RenderToStreamAsync(ms);
                 return ms;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return await GetPicPreviewAsync(defaultPicPath);
             }
@@ -101,8 +121,26 @@ namespace FileManager_UWP.Service
                     return await GetPicPreviewAsync(path);
                 case PreviewModel.FileType.Pdf:
                     return await GetPDFPreviewAsync(path);
+                case PreviewModel.FileType.Office:
+                    return await GetWordPreviewAsync(path);
                 default:
                     return await GetPicPreviewAsync(defaultPicPath);
+            }
+        }
+
+        private static async Task<IRandomAccessStream> GetPDFPreviewFromStreamAsync(IRandomAccessStream stream)
+        {
+            try
+            {
+                var pdf = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(stream);
+                var page = pdf.GetPage(0);
+                InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
+                await page.RenderToStreamAsync(ms);
+                return ms;
+            }
+            catch (Exception)
+            {
+                return await GetPicPreviewAsync(defaultPicPath);
             }
         }
     }

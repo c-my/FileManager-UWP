@@ -12,7 +12,8 @@ namespace FileManager_UWP.Model
         public const string JPGType = "255216";
         public const string GIFType = "7173";
         public const string BMPType = "6677";
-
+        public const string OfficeOldType = "208207";
+        public const string OfficeXType = "8075";
         public const string PDFType = "3780";
 
 
@@ -21,6 +22,7 @@ namespace FileManager_UWP.Model
             NAT = 0,//not a type
             Picture,
             Pdf,
+            Office,
         }
     }
 }
