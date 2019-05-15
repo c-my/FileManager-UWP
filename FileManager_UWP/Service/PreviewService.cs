@@ -10,7 +10,6 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
-using Syncfusion.Pdf;
 
 namespace FileManager_UWP.Service
 {
@@ -54,6 +53,11 @@ namespace FileManager_UWP.Service
             }
         }
 
+        /// <summary>
+        /// 获得Word文件的预览图
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <returns>Word的预览</returns>
         public static async Task<IRandomAccessStream> GetWordPreviewAsync(string path)
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(path);

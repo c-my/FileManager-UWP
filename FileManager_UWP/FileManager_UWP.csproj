@@ -221,6 +221,15 @@
     <PackageReference Include="Syncfusion.DocIORenderer.NET.Core">
       <Version>17.1.0.47</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Presentation.UWP">
+      <Version>17.1.0.47</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.PresentationRenderer.Net.Core">
+      <Version>17.1.0.47</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.XlsIORenderer.Net.Core">
+      <Version>17.1.0.47</Version>
+    </PackageReference>
     <PackageReference Include="System.IO">
       <Version>4.3.0</Version>
     </PackageReference>
