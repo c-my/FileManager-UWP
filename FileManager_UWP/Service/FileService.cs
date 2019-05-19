@@ -34,7 +34,7 @@ namespace FileManager_UWP.Service {
             //var virtualFolderName = path.Substring(0, path.LastIndexOf('\\'));
             //path = path.Substring(path.LastIndexOf('\\'));
             var directoryName = Path.GetDirectoryName(path);
-            var virtualFolderName = path.Substring(path.LastIndexOf('\\'));
+            var virtualFolderName = path.Substring(path.LastIndexOf('\\') + 1);
 
             if (directoryName == null)
                 throw new FileNotFoundException();
@@ -97,7 +97,7 @@ namespace FileManager_UWP.Service {
             foreach (var virtualFolder in folderSetting.VirtualFolders) {
                 displayFileFolderItems.Add(new DisplayableSpecial(
                     virtualFolder.Name,
-                    folder.Path + "//" + virtualFolder.Name,
+                    folder.Path + "\\" + virtualFolder.Name,
                     Type.VirtualFolder,
                     await IconServer.GetFolderIcon(ThumbnailMode.ListView, 32)));
             }
