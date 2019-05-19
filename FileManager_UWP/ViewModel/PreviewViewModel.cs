@@ -44,20 +44,37 @@ namespace FileManager_UWP.ViewModel
         }
 
         private RelayCommand<String> _showPreviewCommand;
+        private RelayCommand _nextPageCommand;
+        private RelayCommand _prevPageCommand;
+
 
         public RelayCommand<String> ShowPreviewCommand =>
             _showPreviewCommand ?? (_showPreviewCommand = new RelayCommand<String>(async (String path) =>
               {
                   if (path == null)
-                      path = "p";
+                      path = "C:\\Users\\CaiMY\\Downloads\\tt.pdf";
                   var preview = await PreviewService.ShowPreviewAsync(path);
                   ImgSource.SetSource(preview);
               }));
 
-        //public void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        //{
-        //    // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-        //    this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        //}
+        public RelayCommand NextPageCommand =>
+            _nextPageCommand ?? (_nextPageCommand = new RelayCommand(async () =>
+            {
+                if (PreviewService.IsCurrentPDF())
+                {
+                    var nextPage = await PreviewService.GetNextPageAsync();
+                    ImgSource.SetSource(nextPage);
+                }
+            }));
+
+        public RelayCommand PrevPageCommand =>
+            _prevPageCommand ?? (_prevPageCommand = new RelayCommand(async () =>
+            {
+                if (PreviewService.IsCurrentPDF())
+                {
+                    var prevPage = await PreviewService.GetPrevPageAsync();
+                    ImgSource.SetSource(prevPage);
+                }
+            }));
     }
 }

@@ -19,8 +19,9 @@
                     RelativePanel.AlignHorizontalCenterWithPanel="True"
                     Orientation="Horizontal"
                     Spacing="30">
-            <Button Command="{x:Bind vm.ShowPreviewCommand}">←</Button>
-            <Button>→</Button>
+            <Button Command="{x:Bind vm.ShowPreviewCommand}">Do</Button>
+            <Button Command="{x:Bind vm.PrevPageCommand}">←</Button>
+            <Button Command="{x:Bind vm.NextPageCommand}">→</Button>
         </StackPanel>
 
     </RelativePanel>

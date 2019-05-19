@@ -16,8 +16,16 @@ namespace FileManager_UWP.Service
     class PreviewService
     {
 
-        //private static string defaultPicPath = "C:\\Users\\CaiMY\\Downloads\\test.png";//"ms-appx:///Assets/StoreLogo.png";
         private static string defaultPicPath = "ms-appx:///Assets/SplashScreen.scale-200.png";
+        private static PreviewModel.FileType currentFileType = PreviewModel.FileType.NAT;
+        private static uint currentPdfCount = 0;
+        private static uint currentPdfPage = 0;
+        private static string currentPdfPath = "";
+
+        public static bool IsCurrentPDF()
+        {
+            return currentFileType == PreviewModel.FileType.Pdf;
+        }
 
         /// <summary>
         /// 判断文件的类型（图片/PDF文档）
@@ -79,6 +87,7 @@ namespace FileManager_UWP.Service
             wordDocument.Dispose();
             InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
             pdfDocument.Save(ms.AsStream());
+            currentFileType = PreviewModel.FileType.Office;
             return await GetPDFPreviewFromStreamAsync(ms);
         }
 
@@ -100,6 +109,7 @@ namespace FileManager_UWP.Service
                     file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(path));
                 }
                 var res = await file.OpenAsync(FileAccessMode.Read);
+                currentFileType = PreviewModel.FileType.Picture;
                 return res;
             }
         }
@@ -109,22 +119,44 @@ namespace FileManager_UWP.Service
         /// </summary>
         /// <param name="path">文档路径</param>
         /// <returns>PDF的预览</returns>
-        public static async Task<IRandomAccessStream> GetPDFPreviewAsync(string path)
+        public static async Task<IRandomAccessStream> GetPDFPreviewAsync(string path, uint p = 0)
         {
             StorageFile pdfFile;
             try
             {
                 pdfFile = await StorageFile.GetFileFromPathAsync(path);
                 var pdf = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(pdfFile);
-                var page = pdf.GetPage(0);
+                var page = pdf.GetPage(p);
+                currentPdfCount = pdf.PageCount;
+                currentPdfPage = p;
+                currentPdfPath = path;
                 InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
                 await page.RenderToStreamAsync(ms);
+                currentFileType = PreviewModel.FileType.Pdf;
                 return ms;
             }
             catch (Exception)
             {
                 return await GetPicPreviewAsync(defaultPicPath);
             }
+        }
+
+        public static async Task<IRandomAccessStream> GetNextPageAsync()
+        {
+            if (currentPdfPage + 1 < currentPdfCount)
+            {
+                currentPdfPage += 1;
+            }
+            return await GetPDFPreviewAsync(currentPdfPath, currentPdfPage);
+        }
+
+        public static async Task<IRandomAccessStream> GetPrevPageAsync()
+        {
+            if (currentPdfPage != 0)
+            {
+                currentPdfPage -= 1;
+            }
+            return await GetPDFPreviewAsync(currentPdfPath, currentPdfPage);
         }
 
         public static async Task<IRandomAccessStream> ShowPreviewAsync(string path)
@@ -151,12 +183,14 @@ namespace FileManager_UWP.Service
             }
         }
 
-        private static async Task<IRandomAccessStream> GetPDFPreviewFromStreamAsync(IRandomAccessStream stream)
+        private static async Task<IRandomAccessStream> GetPDFPreviewFromStreamAsync(IRandomAccessStream stream, uint p = 0)
         {
             try
             {
                 var pdf = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(stream);
-                var page = pdf.GetPage(0);
+                var page = pdf.GetPage(p);
+                currentPdfCount = pdf.PageCount;
+                currentPdfPage = p;
                 InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
                 await page.RenderToStreamAsync(ms);
                 return ms;
