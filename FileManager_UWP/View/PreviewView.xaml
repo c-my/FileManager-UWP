@@ -9,12 +9,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <RelativePanel>
-        <Image Width="300" Height="300"
+        <ScrollViewer   ZoomMode="Enabled"
+                        HorizontalScrollBarVisibility="Auto"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignHorizontalCenterWithPanel="True">
+            <Image Width="500" Height="500"
             VerticalAlignment="Center" Source="{x:Bind vm.ImgSource}">
-            <!--<Image.Source>
-                <BitmapImage UriSource="{x:Bind vm.ImgSource}"></BitmapImage>
-            </Image.Source>-->
-        </Image>
+            </Image>
+        </ScrollViewer>
         <StackPanel RelativePanel.AlignBottomWithPanel="True"
                     RelativePanel.AlignHorizontalCenterWithPanel="True"
                     Orientation="Horizontal"
