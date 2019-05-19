@@ -38,6 +38,7 @@ namespace FileManager_UWP.View {
                     sp.Height = 44;
                     sp.Padding = new Windows.UI.Xaml.Thickness(12);
                     sp.Orientation = Orientation.Horizontal;
+                    // TODO：滥用Tag
                     sp.SetValue(StackPanel.TagProperty, displayFileItem);
                     
                     Image Icon = new Image();
