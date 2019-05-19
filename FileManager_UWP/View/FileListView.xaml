@@ -25,15 +25,16 @@
         <!--<controls:LabelListControl ItemsSource="{x:Bind vm.Labels}" />-->
 
 
-        <Button 
+        <!--<Button 
             Grid.Row="0"
             Grid.Column="1"
             Command="{Binding RefreshCommand}"
             Content="刷新文件列表"
-            FontSize="20"/>
+            FontSize="20"/>-->
         <TextBox
             Grid.Row="0"
             Grid.Column="0"
+            Grid.ColumnSpan="2"
             Width="Auto"
             Text="{Binding Path}"
             />
