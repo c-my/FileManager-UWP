@@ -43,12 +43,12 @@ namespace FileManager_UWP.ViewModel
             set => Set(nameof(Path), ref _path, value);
         }
 
-        private RelayCommand _showPreviewCommand;
+        private RelayCommand<String> _showPreviewCommand;
 
-        public RelayCommand ShowPreviewCommand =>
-            _showPreviewCommand ?? (_showPreviewCommand = new RelayCommand(async () =>
+        public RelayCommand<String> ShowPreviewCommand =>
+            _showPreviewCommand ?? (_showPreviewCommand = new RelayCommand<String>(async (String path) =>
               {
-                  var preview = await PreviewService.ShowPreviewAsync(Path);
+                  var preview = await PreviewService.ShowPreviewAsync(path);
                   ImgSource.SetSource(preview);
               }));
 
