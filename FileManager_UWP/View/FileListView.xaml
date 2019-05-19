@@ -87,6 +87,10 @@
                 <Custom1:EventTriggerBehavior EventName="DoubleTapped">
                     <Custom1:InvokeCommandAction Command="{Binding DoubleTappedCommand}"/>
                 </Custom1:EventTriggerBehavior>
+
+                <Custom1:EventTriggerBehavior EventName="Tapped">
+                    <Custom1:InvokeCommandAction Command="{Binding TappedCommand}"/>
+                </Custom1:EventTriggerBehavior>
             </Custom:Interaction.Behaviors>
 
         </ListView>

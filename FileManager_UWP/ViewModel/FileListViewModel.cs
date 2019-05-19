@@ -108,5 +108,16 @@ namespace FileManager_UWP.ViewModel {
                         RefreshCommand.Execute(null);
                     }
                 }));
+
+        private RelayCommand _tappedCommand;
+        public RelayCommand TappedCommand =>
+            _tappedCommand ?? (_tappedCommand = new RelayCommand(
+                () => {
+                    PreviewViewModel pvm = SimpleIoc.Default.GetInstance<PreviewViewModel>();
+                    StackPanel sp = ListSelectedItem as StackPanel;
+                    Displayable i = sp.GetValue(StackPanel.TagProperty) as Displayable;
+                    // pvm.Path = i.Path;
+                    pvm.ShowPreviewCommand.Execute(i.Path);
+                }));
     }
 }
