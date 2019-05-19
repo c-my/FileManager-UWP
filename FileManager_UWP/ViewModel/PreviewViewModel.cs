@@ -48,6 +48,8 @@ namespace FileManager_UWP.ViewModel
         public RelayCommand<String> ShowPreviewCommand =>
             _showPreviewCommand ?? (_showPreviewCommand = new RelayCommand<String>(async (String path) =>
               {
+                  if (path == null)
+                      path = "p";
                   var preview = await PreviewService.ShowPreviewAsync(path);
                   ImgSource.SetSource(preview);
               }));
