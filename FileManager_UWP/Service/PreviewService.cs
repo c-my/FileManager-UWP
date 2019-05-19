@@ -16,8 +16,8 @@ namespace FileManager_UWP.Service
     class PreviewService
     {
 
-        private static string defaultPicPath = "ms-appx:///Assets/StoreLogo.png";
-
+        //private static string defaultPicPath = "C:\\Users\\CaiMY\\Downloads\\test.png";//"ms-appx:///Assets/StoreLogo.png";
+        private static string defaultPicPath = "ms-appx:///Assets/SplashScreen.scale-200.png";
 
         /// <summary>
         /// 判断文件的类型（图片/PDF文档）
@@ -26,7 +26,16 @@ namespace FileManager_UWP.Service
         /// <returns>文件类型</returns>
         public static async Task<PreviewModel.FileType> GetFileTypeAsync(string path)
         {
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+
+            StorageFile file;
+            try
+            {
+                file = await StorageFile.GetFileFromPathAsync(path);
+            }
+            catch (Exception)
+            {
+                return PreviewModel.FileType.NAT;
+            }
             var buffer = await Windows.Storage.FileIO.ReadBufferAsync(file);
             string res = "";
             using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buffer))
@@ -78,18 +87,20 @@ namespace FileManager_UWP.Service
         /// </summary>
         /// <param name="path">图片路径</param>
         /// <returns>图片的预览</returns>
-        public static async Task<IRandomAccessStream> GetPicPreviewAsync(string path)
+        public static async Task<IRandomAccessStream> GetPicPreviewAsync(string path, bool inner = false)
         {
-            try
             {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                StorageFile file;
+                if (inner == false)
+                {
+                    file = await StorageFile.GetFileFromPathAsync(path);
+                }
+                else
+                {
+                    file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(path));
+                }
                 var res = await file.OpenAsync(FileAccessMode.Read);
                 return res;
-            }
-            catch (System.Exception)
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(defaultPicPath);
-                return await file.OpenAsync(FileAccessMode.Read);
             }
         }
 
@@ -118,17 +129,25 @@ namespace FileManager_UWP.Service
 
         public static async Task<IRandomAccessStream> ShowPreviewAsync(string path)
         {
-            var t = await GetFileTypeAsync(path);
-            switch (t)
+            try
             {
-                case PreviewModel.FileType.Picture:
-                    return await GetPicPreviewAsync(path);
-                case PreviewModel.FileType.Pdf:
-                    return await GetPDFPreviewAsync(path);
-                case PreviewModel.FileType.Office:
-                    return await GetWordPreviewAsync(path);
-                default:
-                    return await GetPicPreviewAsync(defaultPicPath);
+                var t = await GetFileTypeAsync(path);
+                switch (t)
+                {
+                    case PreviewModel.FileType.Picture:
+                        return await GetPicPreviewAsync(path);
+                    case PreviewModel.FileType.Pdf:
+                        return await GetPDFPreviewAsync(path);
+                    case PreviewModel.FileType.Office:
+                        return await GetWordPreviewAsync(path);
+                    default:
+                        return await GetPicPreviewAsync(defaultPicPath, true);
+                }
+            }
+            catch (Exception)
+            {
+                return await GetPicPreviewAsync(defaultPicPath, true);
+
             }
         }
 
