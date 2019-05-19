@@ -8,13 +8,20 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel>
+    <RelativePanel>
         <Image Width="300" Height="300"
             VerticalAlignment="Center" Source="{x:Bind vm.ImgSource}">
             <!--<Image.Source>
                 <BitmapImage UriSource="{x:Bind vm.ImgSource}"></BitmapImage>
             </Image.Source>-->
         </Image>
-        <Button Command="{x:Bind vm.ShowPreviewCommand}">Do</Button>
-    </StackPanel>
+        <StackPanel RelativePanel.AlignBottomWithPanel="True"
+                    RelativePanel.AlignHorizontalCenterWithPanel="True"
+                    Orientation="Horizontal"
+                    Spacing="30">
+            <Button Command="{x:Bind vm.ShowPreviewCommand}">←</Button>
+            <Button>→</Button>
+        </StackPanel>
+
+    </RelativePanel>
 </Page>
