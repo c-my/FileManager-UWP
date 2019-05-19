@@ -2,6 +2,7 @@
 using FileManager_UWP.Service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,10 @@ using Type = FileManager_UWP.Model.Type;
 
 namespace FileManager_UWP.ViewModel {
     public class FileListViewModel: ViewModelBase {
+
+        public FileListViewModel() {
+            SimpleIoc.Default.Register<FileService>();
+        }
         public ObservableCollection<LabelItem> Labels =
             new ObservableCollection<LabelItem>{
                 new LabelItem("照片"),
@@ -58,7 +63,8 @@ namespace FileManager_UWP.ViewModel {
             _refreshCommand ?? (_refreshCommand = new RelayCommand(async () => {
                 Debug.WriteLine("Refresh");
                 try {
-                    var fileService = new FileService();
+                    var fileService = SimpleIoc.Default.GetInstance<FileService>();
+                    // var fileService = new FileService();
                     var fileList = await fileService.GetDisplayFileFolderList(Path);
                     DisplayFileFolderItems = fileList;
                 } catch (System.UnauthorizedAccessException) {
@@ -68,8 +74,6 @@ namespace FileManager_UWP.ViewModel {
                         CloseButtonText = "行"
                     };
                     ContentDialogResult result = await noWifiDialog.ShowAsync();
-                } catch (Exception e) {
-                    Debug.WriteLine(e.Message);
                 }
             }));
 

@@ -1,4 +1,5 @@
 ﻿using FileManager_UWP.ViewModel;
+using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +32,8 @@ namespace FileManager_UWP.View
         public PreviewView()
         {
             this.InitializeComponent();
-            vm = new PreviewViewModel();
+            vm = SimpleIoc.Default.GetInstance<PreviewViewModel>();
+            // vm = new PreviewViewModel();
             DataContext = vm;
         }
     }

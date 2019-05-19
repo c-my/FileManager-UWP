@@ -1,5 +1,6 @@
 ﻿using FileManager_UWP.Service;
 using FileManager_UWP.View;
+using FileManager_UWP.ViewModel;
 using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,8 @@ namespace FileManager_UWP
                 Window.Current.Activate();
             }
 
-            SimpleIoc.Default.Register<FileService>();
+            // SimpleIoc.Default.Register<FileService>();
+            // SimpleIoc.Default.Register<FileListViewModel>();
         }
 
         /// <summary>

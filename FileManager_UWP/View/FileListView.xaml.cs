@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using FileManager_UWP.Model;
 using System.Diagnostics;
 using FileManager_UWP.Controls;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace FileManager_UWP.View {
     
@@ -22,7 +23,8 @@ namespace FileManager_UWP.View {
         private FileListViewModel vm;
         public FileListView() {
             this.InitializeComponent();
-            vm = new FileListViewModel();
+            vm = SimpleIoc.Default.GetInstance<FileListViewModel>();
+            // vm = new FileListViewModel();
             DataContext = vm;
             vm.RefreshCommand.Execute(null);
             vm.PropertyChanged += Vm_PropertyChanged;
@@ -52,6 +54,7 @@ namespace FileManager_UWP.View {
 
                     LabelListControl labels = new LabelListControl();
                     labels.ItemsSource = displayFileItem.Labels;
+                    labels.Padding = new Windows.UI.Xaml.Thickness(0, -50, 0, 0);
 
                     sp.Children.Add(Icon);
                     sp.Children.Add(Name);

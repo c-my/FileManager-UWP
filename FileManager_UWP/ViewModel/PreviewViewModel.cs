@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FileManager_UWP.ViewModel
 {
-    class PreviewViewModel :ViewModelBase//, INotifyPropertyChanged
+    public class PreviewViewModel :ViewModelBase//, INotifyPropertyChanged
     {
         //public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public PreviewViewModel()

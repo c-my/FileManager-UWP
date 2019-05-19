@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileManager_UWP.ViewModel
 {
-    class MainPageViewModel
+    public class MainPageViewModel
     {
     }
 }
