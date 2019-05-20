@@ -10,7 +10,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using DataAccessLibrary;
 using Type = FileManager_UWP.Model.Type;
+using DataAccessLibrary.Service;
 
 namespace FileManager_UWP.ViewModel {
     public class FileListViewModel: ViewModelBase {
@@ -18,15 +20,6 @@ namespace FileManager_UWP.ViewModel {
         public FileListViewModel() {
             SimpleIoc.Default.Register<FileService>();
         }
-        public ObservableCollection<LabelItem> Labels =
-            new ObservableCollection<LabelItem>{
-                new LabelItem("照片"),
-                new LabelItem("土耳其摔跤"),
-                new LabelItem("李若明"),
-                new LabelItem("鸢晓曼"),
-                new LabelItem("才明洋与吴岳江进行土耳其摔跤"),
-                new LabelItem("真正的瑜伽大师")
-            };
 
         /// <summary>
         /// 当前路径
@@ -101,6 +94,8 @@ namespace FileManager_UWP.ViewModel {
             _doubleTappedCommand ?? (_doubleTappedCommand = new RelayCommand(
                 () => {
                     StackPanel sp = ListSelectedItem as StackPanel;
+                    if (sp == null)
+                        return;
                     Displayable i = sp.GetValue(StackPanel.TagProperty) as Displayable;
                     //Displayable i = ListSelectedItem as Displayable;
                     Debug.WriteLine("Double tapped");
@@ -116,6 +111,8 @@ namespace FileManager_UWP.ViewModel {
                 () => {
                     PreviewViewModel pvm = SimpleIoc.Default.GetInstance<PreviewViewModel>();
                     StackPanel sp = ListSelectedItem as StackPanel;
+                    if (sp == null)
+                        return;
                     Displayable i = sp.GetValue(StackPanel.TagProperty) as Displayable;
                     // pvm.Path = i.Path;
                     pvm.ShowPreviewCommand.Execute(i.Path);
@@ -129,6 +126,7 @@ namespace FileManager_UWP.ViewModel {
                     string path = e.LabelListControl.GetValue(LabelListControl.TagProperty) as string;
                     LabelItem label = e.label;
                     Debug.WriteLine("remove " + path + " " + label.tag);
+                    LabelService.RemoveLabel(path, label.tag);
                 })
             );
 
@@ -140,6 +138,8 @@ namespace FileManager_UWP.ViewModel {
                     string path = e.LabelListControl.GetValue(LabelListControl.TagProperty) as string;
                     LabelItem label = e.label;
                     Debug.WriteLine("add " + path + " " + label.tag);
+                    if (path != "" && label.tag != "")
+                        LabelService.AddLabel(path, label.tag);
                 })
             );
     }

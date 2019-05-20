@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccessLibrary.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace FileManager_UWP.Model
         private DisplayableFile(StorageFile f) {
             _file = f;
             _icon = new BitmapImage();
-            _labels = new List<LabelItem> { new LabelItem("喵喵喵") };
+            _labels = LabelService.GetLabels(f.Path).Select((x) => new LabelItem(x)).ToList();
         }
 
         public static async Task<DisplayableFile> GetInstanceAsync(StorageFile f) {

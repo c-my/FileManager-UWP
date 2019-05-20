@@ -1,4 +1,5 @@
 ﻿using CommonServiceLocator;
+using DataAccessLibrary.Service;
 using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,12 @@ namespace FileManager_UWP.ViewModel {
         public FileListViewModel FileListViewModel => ServiceLocator.Current.GetInstance<FileListViewModel>();
         public MainPageViewModel MainPageViewModel => ServiceLocator.Current.GetInstance<MainPageViewModel>();
         public PreviewViewModel PreviewViewModel => ServiceLocator.Current.GetInstance<PreviewViewModel>();
+        // public LabelService LabelService => ServiceLocator.Current.GetInstance<LabelService>();
 
         public ViewModelLocator() {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+
+            LabelService.InitializeDatabase();
 
             SimpleIoc.Default.Register<FileListViewModel>();
             SimpleIoc.Default.Register<MainPageViewModel>();

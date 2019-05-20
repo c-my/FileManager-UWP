@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccessLibrary.Service;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace FileManager_UWP.Model
     public class DisplayableDisk: Displayable {
         private readonly DriveInfo _drive;
         private readonly BitmapImage _icon = new BitmapImage();
-        private readonly List<LabelItem> _labels = new List<LabelItem>();
+        private readonly List<LabelItem> _labels;
 
         private DisplayableDisk(DriveInfo d) {
             _drive = d;
+            _labels = LabelService.GetLabels(d.Name).Select((x) => new LabelItem(x)).ToList();
+
         }
 
         public static async Task<DisplayableDisk> GetInstance(DriveInfo d) {

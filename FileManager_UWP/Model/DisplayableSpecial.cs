@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccessLibrary.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace FileManager_UWP.Model
             Path = path;
             Type = type;
             Icon = icon;
-            Labels = new List<LabelItem>();
+            Labels = LabelService.GetLabels(Path).Select((x) => new LabelItem(x)).ToList();
         }
         public override string Name { get; }
         public override string Path { get; }
