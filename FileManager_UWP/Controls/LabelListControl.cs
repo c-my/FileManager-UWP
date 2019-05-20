@@ -1,4 +1,5 @@
 ﻿using FileManager_UWP.Model;
+using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,10 +19,21 @@ using Windows.UI.Xaml.Media.Animation;
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace FileManager_UWP.Controls {
+    public class LabelListChangeEvent {
+        public enum EventType { Add, Remove };
+
+        public LabelListControl LabelListControl;
+        public EventType eventType;
+        public LabelItem label;
+    }
+
     /// <summary>
     /// 一个可以自动折叠的标签菜单
     /// </summary>
     public class LabelListControl: ItemsControl {
+
+        // public delegate void OnLabelChanged(LabelItem item);
+        public RelayCommand<LabelListChangeEvent> OnAddLabel = null, OnRemoveLabel = null;
 
         //private int _collpse_distance = 22;
         //private List<int> _expanded_position = new List<int>();
@@ -205,8 +217,14 @@ namespace FileManager_UWP.Controls {
             Debug.WriteLine("Manipulation finish");
             _draging = false;
             ObservableCollection<LabelItem> itemsSource = ItemsSource as ObservableCollection<LabelItem>;
-            itemsSource.Remove((sender as Button).GetValue(LabelProperty) as LabelItem);
+            var toRemove = (sender as Button).GetValue(LabelProperty) as LabelItem;
+            itemsSource.Remove(toRemove);
             update();
+            OnRemoveLabel?.Execute(new LabelListChangeEvent {
+                label = toRemove,
+                LabelListControl = this,
+                eventType = LabelListChangeEvent.EventType.Remove
+            });
         }
 
         private void B_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e) {
@@ -255,10 +273,17 @@ namespace FileManager_UWP.Controls {
         private void TextBox_LostFocus(object sender, RoutedEventArgs e) {
             _adding_new_label = false;
             TextBox tb = sender as TextBox;
+            var NewLabel = new LabelItem(tb.Text);
             if (tb.Text.Count() != 0)
-                (ItemsSource as ObservableCollection<LabelItem>).Add(new LabelItem(tb.Text));
+                (ItemsSource as ObservableCollection<LabelItem>).Add(NewLabel);
             if (!_hovering)
                 LabelListCanvas_PointerExited(null, null);
+            // 调用回调函数
+            OnAddLabel?.Execute(new LabelListChangeEvent {
+                label = NewLabel,
+                LabelListControl = this,
+                eventType = LabelListChangeEvent.EventType.Add
+            });
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e) {

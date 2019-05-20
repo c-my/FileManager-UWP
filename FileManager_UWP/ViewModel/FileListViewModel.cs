@@ -1,4 +1,5 @@
-﻿using FileManager_UWP.Model;
+﻿using FileManager_UWP.Controls;
+using FileManager_UWP.Model;
 using FileManager_UWP.Service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -119,5 +120,27 @@ namespace FileManager_UWP.ViewModel {
                     // pvm.Path = i.Path;
                     pvm.ShowPreviewCommand.Execute(i.Path);
                 }));
+
+        private RelayCommand<LabelListChangeEvent> _labelRemoveCommand;
+        public RelayCommand<LabelListChangeEvent> LabelRemoveCommand =>
+            _labelRemoveCommand ?? (_labelRemoveCommand = 
+            new RelayCommand<LabelListChangeEvent>(
+                (LabelListChangeEvent e) => {
+                    string path = e.LabelListControl.GetValue(LabelListControl.TagProperty) as string;
+                    LabelItem label = e.label;
+                    Debug.WriteLine("remove " + path + " " + label.tag);
+                })
+            );
+
+        private RelayCommand<LabelListChangeEvent> _labelAddCommand;
+        public RelayCommand<LabelListChangeEvent> LabelAddCommand =>
+            _labelAddCommand ?? (_labelAddCommand =
+            new RelayCommand<LabelListChangeEvent>(
+                (LabelListChangeEvent e) => {
+                    string path = e.LabelListControl.GetValue(LabelListControl.TagProperty) as string;
+                    LabelItem label = e.label;
+                    Debug.WriteLine("add " + path + " " + label.tag);
+                })
+            );
     }
 }

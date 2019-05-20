@@ -54,13 +54,16 @@ namespace FileManager_UWP.View {
 
                     LabelListControl labels = new LabelListControl();
                     labels.ItemsSource = displayFileItem.Labels;
-                    labels.Padding = new Windows.UI.Xaml.Thickness(0, -50, 0, 0);
+                    // labels.Padding = new Windows.UI.Xaml.Thickness(0, -50, 0, 0);
+                    labels.SetValue(LabelListControl.TagProperty, displayFileItem.Path);
+                    labels.OnRemoveLabel = vm.LabelRemoveCommand;
+                    labels.OnAddLabel = vm.LabelAddCommand;
+
 
                     sp.Children.Add(Icon);
                     sp.Children.Add(Name);
                     sp.Children.Add(labels);
                     MicroShitList.Items.Add(sp);
-
                 }
             }
         }
