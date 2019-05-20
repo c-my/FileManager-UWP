@@ -24,9 +24,16 @@
                 <NavigationViewItem Icon="Tag"></NavigationViewItem>
             </StackPanel>
         </NavigationView.PaneFooter>
-        <StackPanel Orientation="Horizontal">
-            <Frame Name="mainFrame"/>
-            <Frame Name="previewFrame"/>
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Frame Name="mainFrame" Grid.Column="0"/>
+            <Frame Name="previewFrame" Grid.Column="1"/>
+        </Grid>
+        <!--<StackPanel Orientation="Horizontal">
+            
+        </StackPanel>-->
     </NavigationView>
 </Page>
