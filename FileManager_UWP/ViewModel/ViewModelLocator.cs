@@ -1,5 +1,6 @@
 ﻿using CommonServiceLocator;
 using DataAccessLibrary.Service;
+using FileManager_UWP.Service;
 using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ namespace FileManager_UWP.ViewModel {
             SimpleIoc.Default.Register<FileListViewModel>();
             SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<PreviewViewModel>();
+
+            SimpleIoc.Default.Register<IFileService, FileService>();
         }
     }
 }

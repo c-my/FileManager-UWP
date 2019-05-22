@@ -18,7 +18,7 @@ namespace FileManager_UWP.ViewModel {
     public class FileListViewModel: ViewModelBase {
 
         public FileListViewModel() {
-            SimpleIoc.Default.Register<FileService>();
+            // SimpleIoc.Default.Register<FileService>();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace FileManager_UWP.ViewModel {
             _refreshCommand ?? (_refreshCommand = new RelayCommand(async () => {
                 Debug.WriteLine("Refresh");
                 try {
-                    var fileService = SimpleIoc.Default.GetInstance<FileService>();
+                    var fileService = SimpleIoc.Default.GetInstance<IFileService>();
                     // var fileService = new FileService();
                     var fileList = await fileService.GetDisplayFileFolderList(Path);
                     DisplayFileFolderItems = fileList;

@@ -3,16 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Security.Authentication;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Data.Json;
-using Windows.Devices.Custom;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Windows.Web.Http.Headers;
-using Newtonsoft.Json;
 using Type = FileManager_UWP.Model.Type;
 
 namespace FileManager_UWP.Service {
