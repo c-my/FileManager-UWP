@@ -10,11 +10,11 @@
 
     <NavigationView PaneDisplayMode="LeftCompact" IsBackButtonVisible="Collapsed"
                     >
-        <NavigationView.Header>
+        <!--<NavigationView.Header>
             <RelativePanel Margin="0,5,10,0">
                 <SearchBox Width="300" RelativePanel.AlignRightWithPanel="True"></SearchBox>
             </RelativePanel>
-        </NavigationView.Header>
+        </NavigationView.Header>-->
         <NavigationView.AutoSuggestBox>
             <AutoSuggestBox></AutoSuggestBox>
         </NavigationView.AutoSuggestBox>

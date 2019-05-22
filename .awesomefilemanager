@@ -1,0 +1,12 @@
+{
+    "VirtualFolders": [
+        {
+            "name": "PROGRAMS",
+            "Includes": [
+                "C:\\Program Files (x86)",
+                "C:\\Program Files",
+                "C:\\Users\\wming\\AppData\\Local\\Programs"
+            ]
+        }
+    ]
+}
